@@ -1,0 +1,85 @@
+.welcome-shell {
+  --tour-surface: #fff; --tour-soft: #f2f6f4; --tour-ink: #173c38;
+  --tour-muted: #5c726c; --tour-line: #dbe6e0; --tour-accent: #237465;
+  display: grid; grid-template-columns: 240px minmax(0, 1fr);
+  border: 1px solid var(--tour-line); border-radius: 20px; overflow: hidden;
+  background: var(--tour-surface); color: var(--tour-ink); margin: .5rem 0 2rem;
+}
+[data-theme="dark"] .welcome-shell {
+  --tour-surface: #172c30; --tour-soft: #1d3539; --tour-ink: #e1efea;
+  --tour-muted: #afc6be; --tour-line: #345058; --tour-accent: #92cfb4;
+}
+.welcome-shell form {margin: 0}
+.welcome-steps {background: var(--tour-soft); padding: 2rem 1.25rem; border-right: 1px solid var(--tour-line)}
+.welcome-kicker {font-size: .64rem; font-weight: 700; letter-spacing: .16em; color: var(--tour-accent); margin: 0 0 1rem}
+.welcome-nav-title {font-size: 1.35rem; line-height: 1.35; font-weight: 600; margin: 0 0 2rem}
+.welcome-steps ol {list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem}
+.welcome-step {display: flex; align-items: center; text-align: left; width: 100%; gap: .65rem; background: transparent; color: var(--tour-muted); border: 1px solid transparent; padding: .7rem .45rem; border-radius: 10px; font-size: .78rem; line-height: 1.35; font-weight: 550; white-space: normal}
+.welcome-step small {display: block; margin-top: .25rem; font-size: .65rem; font-weight: 400}
+.welcome-number {display: grid; place-items: center; width: 27px; height: 27px; flex: 0 0 27px; border: 1px solid var(--tour-line); border-radius: 50%; font-size: .72rem}
+.welcome-step[aria-current="step"] {background: var(--tour-surface); color: var(--tour-ink); border-color: var(--tour-line); box-shadow: 0 3px 10px #132e2510}
+.welcome-step[aria-current="step"] .welcome-number {background: var(--tour-accent); color: var(--tour-surface); border-color: transparent}
+.welcome-step:hover {background: var(--tour-surface); color: var(--tour-ink)}
+.welcome-nav-note {margin: 2rem .3rem 0; color: var(--tour-muted); font-size: .72rem; line-height: 1.65}
+.welcome-main {padding: 1.5rem clamp(1.25rem, 3vw, 3rem) 2rem; min-width: 0}
+.welcome-progress {display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; font-size: .68rem; color: var(--tour-muted)}
+.welcome-main>progress {display: block; width: 100%; height: 4px; border: 0; border-radius: 8px; background: var(--tour-line); accent-color: var(--tour-accent); margin: .7rem 0 2rem}
+.welcome-main>progress::-webkit-progress-bar {background: var(--tour-line); border-radius: 8px}
+.welcome-main>progress::-webkit-progress-value {background: var(--tour-accent); border-radius: 8px}
+.welcome-main>progress::-moz-progress-bar {background: var(--tour-accent); border-radius: 8px}
+.welcome-main h2 {font-size: clamp(1.9rem, 3.5vw, 3rem); letter-spacing: -.045em; line-height: 1.13; margin: .5rem 0 1rem; color: var(--tour-ink)}
+.welcome-lead {font-size: .94rem; line-height: 1.8; max-width: 620px; color: var(--tour-muted); margin-bottom: 1.75rem}
+.welcome-scene {display: flex; border: 1px solid var(--tour-line); border-radius: 14px; overflow: hidden; background: var(--tour-soft); transform: rotate(-1deg); margin: 2rem .3rem; box-shadow: 0 10px 24px #102e2310}
+.welcome-mini-nav {padding: 1.25rem .8rem; display: flex; flex-direction: column; gap: 1rem; font-size: .63rem; color: var(--tour-muted); border-right: 1px solid var(--tour-line)}
+.welcome-mini-content {padding: 1.3rem; min-width: 0; flex: 1}
+.welcome-mini-content>strong {display: block; font-size: .95rem; margin: .6rem 0 1rem}
+.welcome-example {font-size: .52rem; letter-spacing: .09em; color: var(--tour-muted)}
+.welcome-notes {display: flex; gap: .9rem; margin: 1.3rem 0 1.4rem}
+.welcome-notes>div {background: #dce9c8; color: #294d3a; padding: 1.2rem .9rem; font-size: .8rem; border-radius: 2px 2px 12px 2px; flex: 1; box-shadow: 1px 3px 5px #203d3514; transform: rotate(-2deg)}
+.welcome-notes>div+div {background: #f8eaa7; color: #614d24; transform: rotate(3deg)}
+.welcome-notes small {display: block; margin-top: .5rem; font-size: .62rem}
+.welcome-mini-week {display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; border-top: 1px solid var(--tour-line); padding-top: .7rem; color: var(--tour-muted); font-size: .55rem}
+.welcome-mini-week span {border-bottom: 4px solid var(--tour-line); padding-bottom: .6rem; text-align: center}
+.welcome-assurance {display: flex; gap: .6rem 1rem; flex-wrap: wrap; font-size: .67rem; line-height: 1.5; color: var(--tour-muted)}
+.welcome-cards {display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.5rem 0}
+.welcome-cards.welcome-three {grid-template-columns: repeat(3, minmax(0, 1fr))}
+.welcome-cards article {padding: 1.15rem; border: 1px solid var(--tour-line); border-radius: 12px; min-width: 0; display: flex; flex-direction: column; align-items: start}
+.welcome-cards h3 {font-size: 1rem; margin: .75rem 0 .3rem; color: var(--tour-ink)}
+.welcome-cards p {font-size: .8rem; line-height: 1.75; color: var(--tour-muted); margin-bottom: 1rem}
+.welcome-cards article>form {margin-top: auto; max-width: 100%}
+.welcome-cards button {font-size: .75rem; text-align: left; white-space: normal; overflow-wrap: anywhere; line-height: 1.5}
+.welcome-card-icon {display: grid; place-items: center; width: 35px; height: 35px; border-radius: 10px; background: var(--tour-soft); color: var(--tour-accent); font-size: 1.1rem}
+.welcome-status {display: flex; align-items: center; gap: 1rem; background: var(--tour-soft); border-radius: 12px; padding: 1.1rem; border: 1px solid var(--tour-line)}
+.welcome-status>span {font-size: 1.7rem; color: var(--tour-accent)}
+.welcome-status strong {font-size: .86rem}
+.welcome-status small {display: block; font-size: .7rem; color: var(--tour-muted); margin-top: .3rem}
+.welcome-tip {font-size: .74rem; color: var(--tour-muted); line-height: 1.75}
+.welcome-actions {display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.3rem 0}
+.welcome-summary {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--tour-line); border-radius: 12px; padding: 1rem; gap: 1rem; background: var(--tour-soft)}
+.welcome-summary strong {display: block; font-size: 1.15rem; margin-bottom: .4rem; overflow-wrap: anywhere}
+.welcome-summary span {font-size: .67rem; color: var(--tour-muted)}
+.welcome-footer {display: flex; gap: 1rem; align-items: center; justify-content: space-between; border-top: 1px solid var(--tour-line); margin-top: 2rem; padding-top: 1.3rem; flex-wrap: wrap}
+.welcome-footer>div {display: flex; align-items: center; gap: .75rem; flex-wrap: wrap}
+.welcome-footer button {font-size: .8rem; white-space: normal}
+.welcome-footer .welcome-pause {background: transparent; color: var(--tour-muted); padding: .65rem .1rem; border-color: transparent; text-decoration: underline; text-underline-offset: 3px}
+.welcome-repeat {margin-top: 1rem!important}
+.welcome-shell button:focus-visible {outline: 3px solid var(--tour-accent); outline-offset: 3px}
+body[data-page="onboarding"] .setup-model-note {display: none}
+body[data-page="onboarding"] .page-toolbar .toolbar-tools {display: none}
+body[data-page="onboarding"].compact .welcome-shell {font-size: 1rem}
+@media(max-width: 1200px) {.welcome-cards.welcome-three {grid-template-columns: 1fr}.welcome-shell {grid-template-columns: 205px minmax(0,1fr)}}
+@media(max-width: 850px) {
+  .welcome-shell {grid-template-columns: 1fr; border-radius: 14px}
+  .welcome-steps {padding: 1rem; border-right: 0; border-bottom: 1px solid var(--tour-line)}
+  .welcome-nav-title,.welcome-nav-note,.welcome-step small,.welcome-steps>.welcome-kicker {display: none}
+  .welcome-steps ol {display: flex; overflow-x: auto; padding: .3rem; gap: .4rem}
+  .welcome-steps li {flex-shrink: 0}.welcome-step {font-size: .68rem; padding: .5rem; gap: .4rem}
+  .welcome-number {width: 23px; height: 23px; flex-basis: 23px}
+  .welcome-main {padding: 1.25rem}.welcome-cards {grid-template-columns: 1fr}
+  .welcome-mini-nav {display: none}.welcome-mini-content {padding: 1rem}
+  .welcome-notes {gap: .5rem}.welcome-notes>div {padding: .9rem .65rem; font-size: .72rem}
+  .welcome-summary {grid-template-columns: 1fr}.welcome-summary>div {display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline}
+  .welcome-summary strong {font-size: 1rem}.welcome-summary span {font-size: .7rem}
+  .welcome-footer {align-items: stretch}.welcome-footer>form,.welcome-footer>form>button {width: 100%}
+}
+@media(prefers-reduced-motion: reduce) {.welcome-scene {transform: none}}

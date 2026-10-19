@@ -7,7 +7,7 @@
 [Setup]
 AppId={{63CE6879-5EA6-48DB-8ADC-69802C8EB9D7}
 AppName=StudyCenter Public ICE
-AppVersion=0.1.0b2
+AppVersion=0.1.0b3
 AppPublisher=StudyCenter Public ICE contributors
 DefaultDirName={localappdata}\Programs\StudyCenter-Public-ICE
 DefaultGroupName=StudyCenter Public ICE
@@ -17,7 +17,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 LicenseFile=..\..\LICENSE
 OutputDir={#OutputDir}
-OutputBaseFilename=studycenter-public-ice-0.1.0b2-windows-x86_64-setup
+OutputBaseFilename=studycenter-public-ice-0.1.0b3-windows-x86_64-setup
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern

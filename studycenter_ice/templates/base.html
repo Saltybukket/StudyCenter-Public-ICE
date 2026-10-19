@@ -12,6 +12,7 @@
   <script src="{{ static_url('app.js') }}" defer></script>
   <script src="{{ static_url('voice.js') }}" defer></script>
   <script src="{{ static_url('notifications.js') }}" defer></script>
+  <script src="{{ static_url('onboarding.js') }}" defer></script>
   <link rel="stylesheet" href="{{ static_url('notifications.css') }}">
 </head>
 <body data-page="{{ page_key }}">
@@ -33,12 +34,14 @@
       <a href="{{ url }}" {% if path==url or (url=='/documents' and path.startswith('/documents/')) %}aria-current="page"{% endif %}><span aria-hidden="true">{{ icon }}</span>{{ label }}</a>
     {% endfor %}
     </nav>
+    <nav aria-label="Erste Schritte"><a href="/welcome" {% if path=='/welcome' %}aria-current="page"{% endif %}><span aria-hidden="true">◇</span>Einrichtung</a></nav>
     <div class="sidebar-note"><span class="status-dot"></span> Ein Rechner. Dein Überblick.<br><small>Zeitzone Europe/Vienna</small></div>
   </aside>
   <main id="main"><div class="page-toolbar"><h1>{{ self.title() }}</h1>{% block toolbar_action %}{% endblock %}<div class="toolbar-tools"><label class="check"><input type="checkbox" id="compact-toggle">Kompakt</label></div></div><div class="sync-strip" {% if stage=='Bereit' %}hidden{% endif %}><div class="sync-copy"><span id="sync-state" role="status">{{ stage }}</span><small id="sync-progress-label" hidden></small></div><progress id="sync-progress" aria-label="Quellenprüfung im aktuellen Sync" hidden></progress></div>
     <div id="notice" role="status" hidden></div>
+    {% if onboarding_progress.status=='active' and path!='/welcome' %}<div class="setup-note setup-tour-return"><span>Du bist in der Ersteinrichtung. Änderungen hier mit dem jeweiligen Formular speichern.</span><a href="/welcome">Einrichtung fortsetzen →</a></div>{% endif %}
     {% if restore_pending and path != '/settings' %}<p class="setup-note warning">Wiederherstellung vorbereitet: Änderungen und Syncs warten auf den App-Neustart. <a href="/settings">Anleitung oder Abbrechen →</a></p>{% endif %}
-    {% if not settings.model_ready %}<div class="setup-note">KI-Auswertung noch nicht bereit. Seiten und PDFs bleiben gespeichert. <a href="/model">Modell verbinden und Live-Probe starten →</a></div>{% endif %}
+    {% if not settings.model_ready %}<div class="setup-note setup-model-note">KI-Auswertung noch nicht bereit. Seiten und PDFs bleiben gespeichert. <a href="/model">Modell verbinden und Live-Probe starten →</a></div>{% endif %}
     {% block content %}{% endblock %}
   </main></div>
   <footer>StudyCenter-ICE <span>Lokal · Quellen-Sync nur manuell</span></footer>

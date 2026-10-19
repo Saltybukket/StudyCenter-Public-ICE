@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Dein Start mit ICE{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ static_url('onboarding.css') }}">{% endblock %}
+{% macro action(destination, label, primary=false) %}
+<form action="/welcome" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="open"><input type="hidden" name="step" value="{{ tour.step }}"><input type="hidden" name="destination" value="{{ destination }}"><button class="{{ '' if primary else 'secondary' }}">{{ label }} <span aria-hidden="true">↗</span></button></form>
+{% endmacro %}
+{% macro move(step, label, secondary=false) %}
+<form action="/welcome" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="move"><input type="hidden" name="step" value="{{ step }}"><button class="{{ 'secondary' if secondary else '' }}">{{ label }}</button></form>
+{% endmacro %}
+{% block content %}
+<div class="welcome-shell">
+  <nav class="welcome-steps" aria-label="Stationen der Einrichtung">
+    <p class="welcome-kicker">DEIN START MIT ICE</p>
+    <p class="welcome-nav-title">Ein Schritt nach<br>dem anderen.</p>
+    <ol>{% for code,label,hint in steps %}<li><form action="/welcome" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="move"><input type="hidden" name="step" value="{{ code }}"><button class="welcome-step" {% if code==tour.step %}aria-current="step"{% endif %}><span class="welcome-number" aria-hidden="true">{{ loop.index }}</span><span>{{ label }}<small>{{ hint }}</small></span></button></form></li>{% endfor %}</ol>
+    <p class="welcome-nav-note">Dein Fortschritt bleibt auf diesem Rechner. Du kannst jederzeit aufhören und später weitermachen.</p>
+  </nav>
+  <section class="welcome-main" aria-labelledby="welcome-heading">
+    <div class="welcome-progress"><span>Station {{ current+1 }} von {{ steps|length }}</span><span>In deinem Tempo · alles optional</span></div>
+    <progress value="{{ current+1 }}" max="{{ steps|length }}" aria-label="Aktuelle Station der Tour"></progress>
+    <p id="welcome-error" class="warning" role="alert" tabindex="-1" hidden></p>
+    {% if tour.step=='welcome' %}
+    <div class="welcome-hero">
+      <p class="welcome-kicker">WILLKOMMEN ZUHAUSE</p><h2 id="welcome-heading">Dein Studium.<br>Dein Überblick.</h2>
+      <p class="welcome-lead">Wir richten ICE gemeinsam ein – mit deinen Kursen, deinen Einstellungen und genau den Funktionen, die du brauchst.</p>
+      <div class="welcome-scene" aria-label="Vorschau: Kurse, Aufgaben und Kalender mit Beispieldaten">
+        <div class="welcome-mini-nav"><span class="brand-mark">sc</span><span>Übersicht</span><span>Aufgaben</span><span>Kalender</span></div>
+        <div class="welcome-mini-content"><span class="welcome-example">VORSCHAU · KEINE ANGELEGTEN DATEN</span><strong>Platz für deinen nächsten Schritt.</strong><div class="welcome-notes"><div>Dein erster Kurs<small>Unterlagen an einem Ort</small></div><div>Dein nächstes Ziel<small>Als Post-it festhalten</small></div></div><div class="welcome-mini-week" aria-hidden="true"><span>MO</span><span>DI</span><span>MI</span><span>DO</span><span>FR</span></div></div>
+      </div>
+      <div class="welcome-assurance"><span>◉ Lokal auf deinem Rechner</span><span>◇ Du wählst deine Verbindungen</span><span>↻ Später jederzeit fortsetzen</span></div>
+    </div>
+    {% elif tour.step=='courses' %}
+    <p class="welcome-kicker">01 · DEIN STUDIUM</p><h2 id="welcome-heading">Ein erster Kurs.<br>Ein guter Anfang.</h2><p class="welcome-lead">Ein Kurs bündelt deine Unterlagen und Quellen. Du kannst ihn selbst anlegen oder später über deine TU-Anmeldung entdecken.</p>
+    <div class="welcome-status"><span aria-hidden="true">⊞</span><div><strong>{{ setup_courses }} {{ 'Kurs' if setup_courses==1 else 'Kurse' }} · {{ setup_sources }} {{ 'Quelle' if setup_sources==1 else 'Quellen' }} angelegt</strong><small>Gespeicherter Stand, noch keine Aussage über einen erfolgreichen Abruf.</small></div></div>
+    <div class="welcome-cards"><article><span class="welcome-card-icon">1</span><h3>Kurs anlegen</h3><p>Trage den Titel deiner Lehrveranstaltung ein. Semester und Gruppe sind optional. Es werden keine Beispielkurse für dich angelegt.</p>{{ action('courses','Kurs anlegen',true) }}</article><article><span class="welcome-card-icon">2</span><h3>Eine Quelle ergänzen</h3><p>Wähle den Kurs und die Art der Quelle. Füge die genaue Start-URL deiner Kursseite ein. Abrufe startest du später selbst.</p>{{ action('source','Quelle hinzufügen') }}</article></div>
+    <p class="welcome-tip">TU-Zugang: Richte zuerst unter „Optionale Extras“ den eigenen Browser ein. Öffne danach „TU-Zugang“ oben in der App; Passwort und MFA gibst du selbst ein.</p>
+    {% elif tour.step=='model' %}
+    <p class="welcome-kicker">02 · DEINE ASSISTENZ</p><h2 id="welcome-heading">KI, wenn sie<br>dir hilft.</h2><p class="welcome-lead">Für die KI-Auswertung und Luna wählst du deinen eigenen Modellzugang. Aufgaben und Notizen kannst du auch ohne Verbindung nutzen.</p>
+    <div class="welcome-status"><span aria-hidden="true">◎</span><div><strong>{{ 'Modellzugang konfiguriert' if setup_model else 'Noch kein Modellzugang bereit' }}</strong><small>Die Live-Verbindungsprobe führst du auf der Verbindungsseite selbst aus.</small></div></div>
+    <div class="welcome-cards"><article><h3>Mit ChatGPT verbinden</h3><p>Wähle den ChatGPT-Zugang und melde dich in deinem eigenen Konto an. Lies die Hinweise zum Zugang und starte anschließend die kleine Verbindungsprobe.</p></article><article><h3>Eigene API verwenden</h3><p>Wähle Chat Completions. Trage API-Adresse, Modellkennung und – falls erforderlich – deinen API-Schlüssel ein. Diese Angaben bekommst du von deinem Anbieter.</p><p class="welcome-tip">Eine API kann Kosten verursachen. ICE wechselt nicht automatisch zu einem anderen Anbieter.</p></article></div>
+    <div class="welcome-actions">{{ action('model','KI-Verbindung öffnen',true) }}</div><p class="welcome-tip">Kursinhalte können zur Auswertung an den von dir gewählten Anbieter gesendet werden. Verbinde nur einen Zugang, den du verwenden möchtest.</p>
+    {% elif tour.step=='preferences' %}
+    <p class="welcome-kicker">03 · DEIN ALLTAG</p><h2 id="welcome-heading">So, wie du<br>gerne arbeitest.</h2><p class="welcome-lead">Passe Meldungen und Darstellung in den echten Einstellungsformularen an. Nach dem Speichern bringt dich „Einrichtung fortsetzen“ wieder hierher.</p>
+    <div class="welcome-cards"><article><span class="welcome-card-icon">◷</span><h3>Benachrichtigungen</h3><p>Wähle Vorlaufzeiten, Ruhezeiten und Meldungsarten. Die Meldungsübersicht und dein Aufgabenstatus bleiben getrennt.</p>{% if not is_windows %}<p class="welcome-tip">Native Windows-Meldungen sind unter Linux nicht verfügbar. Der Verlauf in ICE bleibt nutzbar.</p>{% endif %}{{ action('notifications','Benachrichtigungen einstellen',true) }}</article><article><span class="welcome-card-icon">◐</span><h3>Darstellung</h3><p>Wähle helles, dunkles oder Systemdesign und bei Bedarf die kompakte Ansicht. Die Darstellung wird lokal in deinem Browser gespeichert.</p>{{ action('display','Darstellung wählen') }}</article></div>
+    {% elif tour.step=='components' %}
+    <p class="welcome-kicker">04 · NUR WAS DU BRAUCHST</p><h2 id="welcome-heading">Klein anfangen.<br>Später erweitern.</h2><p class="welcome-lead">Diese Tour lädt keine Extras herunter. Du entscheidest in den Einstellungen über jede Einrichtung.</p>
+    <div class="welcome-cards welcome-three"><article><span class="welcome-card-icon">↗</span><h3>TU-Browser</h3><p>Für TU-Anmeldung und gesteuerte Quellenabrufe. Dein eigener Systembrowser und deine bestehenden Profile bleiben getrennt.</p>{% if not is_windows %}<p class="welcome-tip">Die Browser-Sandbox muss auf deinem Linux-System funktionieren. Die Oberfläche läuft unabhängig davon.</p>{% endif %}</article><article><span class="welcome-card-icon">Aa</span><h3>OCR</h3><p>Für eingescannte PDFs und Bilder. ICE richtet eine eigene portable Laufzeit ein und verändert kein vorhandenes Tesseract.</p></article><article><span class="welcome-card-icon">≈</span><h3>Sprache</h3><p>Erst Sprachbibliotheken unter Betrieb einrichten, dann unter Sprache ein Modell ausdrücklich laden. Ein Modell kann viel Speicher brauchen.</p></article></div>
+    <div class="welcome-actions">{{ action('components','Extras unter Betrieb einrichten',true) }}{{ action('speech','Sprache & Modell auswählen') }}</div>
+    {% elif tour.step=='connections' %}
+    <p class="welcome-kicker">05 · DEINE VERBINDUNGEN</p><h2 id="welcome-heading">Gut verbunden.<br>Mit deiner Erlaubnis.</h2><p class="welcome-lead">Alle Verbindungen sind freiwillig. Du kannst sie später einzeln einrichten, ändern oder wieder trennen.</p>
+    <div class="welcome-cards welcome-three"><article><span class="welcome-card-icon">✉</span><h3>TU-Mail</h3><p>Trage deine eigenen Mail-Zugangsdaten auf der Mail-Seite ein. ICE übernimmt keine Daten aus einer anderen Installation.</p>{{ action('mail','Mail einrichten') }}</article><article><span class="welcome-card-icon">▦</span><h3>Google Kalender</h3><p>Du brauchst einen eigenen OAuth-Desktop-Client. Folge den Anweisungen im Register Google Kalender und bestätige den Kontozugriff selbst.</p>{{ action('google','Google-Anleitung öffnen') }}</article><article><span class="welcome-card-icon">◇</span><h3>Lokales MCP</h3><p>Verbinde bei Bedarf einen lokalen Assistenten. Prüfe die Berechtigungen und erstelle einen eigenen Zugang für deinen Client.</p>{{ action('connections','Verbindungen prüfen') }}</article></div>
+    <p class="welcome-tip">Hosted MCP / Tunnel ist in ICE nicht eingerichtet. Unter Linux bleiben Zugänge ohne ausdrücklich eingerichteten sicheren Schlüsselbund nur für die Sitzung gespeichert.</p>
+    {% else %}
+    <p class="welcome-kicker">06 · DEIN NÄCHSTER SCHRITT</p><h2 id="welcome-heading">Platz für das,<br>was vor dir liegt.</h2><p class="welcome-lead">Du musst nicht alles auf einmal einrichten. Die Tour kannst du über „Einrichtung“ jederzeit wieder öffnen.</p>
+    <div class="welcome-summary"><div><strong>{{ setup_courses }}</strong><span>Kurse angelegt</span></div><div><strong>{{ setup_sources }}</strong><span>Quellen angelegt</span></div><div><strong>{{ 'Konfiguriert' if setup_model else 'Später möglich' }}</strong><span>KI-Verbindung · kein Live-Test</span></div></div>
+    <div class="welcome-cards"><article><h3>Deine Daten sichern</h3><p>Erstelle regelmäßig eine lokale Sicherung. Sie kann persönliche Inhalte enthalten; bewahre sie sicher auf. Zugangsdaten sind davon getrennt.</p>{{ action('backups','Sicherungen öffnen') }}</article><article><h3>ICE im Alltag</h3><p>Notiere ein erstes Post-it unter Aufgaben & Notizen. Quellen werden nur durch deine Abrufaktionen synchronisiert. Unter Betrieb findest du Start, Stopp und plattformspezifische Optionen.</p>{{ action('operation','Betrieb kennenlernen') }}</article></div>
+    {% endif %}
+    <div class="welcome-footer">
+      <div>{% if current>0 %}{{ move(steps[current-1][0],'← Zurück',true) }}{% endif %}<form action="/welcome" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="pause"><input type="hidden" name="step" value="{{ tour.step }}"><button class="welcome-pause">Später fortsetzen</button></form></div>
+      {% if current+1<steps|length %}{{ move(steps[current+1][0], 'Los geht’s →' if current==0 else 'Weiter →') }}{% else %}<form action="/welcome" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="complete"><input type="hidden" name="step" value="finish"><button>Tour abschließen & ICE öffnen →</button></form>{% endif %}
+    </div>
+    {% if tour.status=='done' %}<form action="/welcome" method="post" class="welcome-repeat"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="action" value="restart"><input type="hidden" name="step" value="welcome"><button class="secondary">Tour von vorn ansehen</button></form>{% endif %}
+  </section>
+</div>
+{% endblock %}

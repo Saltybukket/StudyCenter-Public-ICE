@@ -6,21 +6,30 @@ ICE startet leer: Du richtest deine Kurse und Verbindungen selbst ein.
 
 ## Herunterladen
 
-**Aktuelle Version: ICE beta.2** · Windows und Linux, jeweils x64
+**Aktuelle Version: ICE beta.3** · Windows und Linux, jeweils x64
 
 | System | Download | Start |
 | --- | --- | --- |
-| **Windows 10/11** | [**Windows-Setup (.exe)**](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.2/studycenter-public-ice-0.1.0b2-windows-x86_64-setup.exe) | Setup ausführen, anschließend ICE öffnen |
-| Windows, portabel | [Portable ZIP](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.2/studycenter-public-ice-0.1.0b2-windows-x86_64-portable.zip) | Entpacken und `start.cmd` ausführen |
-| **Linux** | [**Linux-Paket (.tar.gz)**](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.2/studycenter-public-ice-0.1.0b2-linux-x86_64.tar.gz) | Entpacken, im Ordner `sh start.sh` ausführen |
+| **Windows 10/11** | [**Windows-Setup (.exe)**](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.3/studycenter-public-ice-0.1.0b3-windows-x86_64-setup.exe) | Setup ausführen, anschließend ICE öffnen |
+| Windows, portabel | [Portable ZIP](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.3/studycenter-public-ice-0.1.0b3-windows-x86_64-portable.zip) | Entpacken und `start.cmd` ausführen |
+| **Linux** | [**Linux-Paket (.tar.gz)**](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.3/studycenter-public-ice-0.1.0b3-linux-x86_64.tar.gz) | Entpacken, im Ordner `sh start.sh` ausführen |
 
-[Versionshinweise und Prüfsummen](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/tag/v0.1.0-ice-beta.2) · [Alle Versionen](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases)
+[Versionshinweise und Prüfsummen](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/tag/v0.1.0-ice-beta.3) · [Alle Versionen](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases)
 
 Beim ersten Start werden Internet und etwas Zeit für die Einrichtung benötigt.
 Vorhandenes CPython 3.12 x64 wird verwendet; andernfalls lädt ICE eine eigene
 Laufzeit. Pakete, Profile und Daten bleiben im eigenen ICE-Verzeichnis.
 Nach einem Abbruch denselben Starter erneut ausführen. Weitere Starts verwenden
 die Einrichtung und bereits geladene Komponenten wieder.
+
+## Erste Schritte in der App
+
+Beim ersten Öffnen eines leeren ICE-Profils begrüßt dich eine visuelle Tour.
+Sie erklärt Kurse und Quellen, KI-Zugang, Benachrichtigungen, Darstellung und
+optionale Extras. Die Tour öffnet die echten Einstellungsformulare; anschließend
+geht es mit **Einrichtung fortsetzen** zurück. Du kannst pausieren und später
+über **Einrichtung** in der Navigation weitergehen. Bestehende Studienbestände
+werden nicht unterbrochen. Die Tour allein startet keine Downloads oder Anmeldungen.
 
 ## Was du nutzen kannst
 

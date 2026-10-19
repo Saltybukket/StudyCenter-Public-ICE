@@ -47,6 +47,7 @@ from .google_calendar import GoogleCalendar, GoogleError, projection
 from .tunnel import TunnelService, local_directory
 from .mcp import MCPGateway,issue_credential
 from .page_images import PageImages
+from . import onboarding
 
 KINDS = {"task": "Aufgabe / Abgabe", "exam": "Prüfung", "event": "Veranstaltung", "registration": "Anmeldefenster", "notice": "Hinweis"}
 STATES = {"new": "Noch nicht abgerufen", "running": "Abruf läuft", "success": "Abruf vollständig", "partial": "Abruf unvollständig", "failed": "Abruf fehlgeschlagen", "login_required": "Anmeldung nötig"}
@@ -367,6 +368,10 @@ def create_app(settings=None):
 
     @app.middleware("http")
     async def local_guard(request, call_next):
+        if (request.method == 'GET' and request.url.path in ('/', '/overview')
+                and 'text/html' in request.headers.get('accept', '')
+                and onboarding.first_launch(db)):
+            return RedirectResponse('/welcome', status_code=303, headers={'Cache-Control': 'no-store'})
         if request.method not in ("GET", "HEAD", "OPTIONS"):
             if app.state.maintenance or ((settings.data_dir / 'restore-pending.zip').exists()
                                         and request.url.path not in ('/settings/backups/cancel','/settings/stop','/settings/restart')):
@@ -405,8 +410,10 @@ def create_app(settings=None):
         return response
 
     def render(request, name, **context):
-        return templates.TemplateResponse(request=request, name=name, context={"csrf": csrf, "settings": settings, "stage": sync.stage, "path": request.url.path, 'page_key':name.split('.')[0],
+        return templates.TemplateResponse(request=request, name=name, context={"csrf": csrf, "settings": settings, "stage": sync.stage, "path": request.url.path, 'page_key':name.split('.')[0], 'onboarding_progress':onboarding.progress(db),
             'restore_pending': (settings.data_dir / 'restore-pending.zip').exists(), 'note_request_id':secrets.token_hex(16), **context})
+
+    onboarding.register(app, db, settings, render)
 
     def activities():
         return [label for busy,label in ((sync.active,'TU-Quellen-Synchronisierung'),
