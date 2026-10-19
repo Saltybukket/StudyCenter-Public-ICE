@@ -126,6 +126,7 @@ def test_owned_templates_parse_and_keep_seven_settings_tabs():
 
 
 def test_shortcut_carries_selected_dataset_and_silent_flag(tmp_path, monkeypatch):
+    monkeypatch.setattr(runtime.subprocess,'CREATE_NO_WINDOW',0,raising=False)
     import base64
     from unittest.mock import Mock
     root=tmp_path/'install';root.mkdir()

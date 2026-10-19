@@ -1,5 +1,6 @@
 """Focused local controls; Google responses are doubles, never live acceptance."""
 import json
+import sys
 import asyncio
 import copy
 from datetime import datetime
@@ -368,6 +369,7 @@ def test_desktop_reuses_only_confirmed_backend_and_does_not_replace_port(tmp_pat
     process.assert_not_called()
 
 
+@pytest.mark.skipif(sys.platform!='win32',reason='Native Windows window defaults')
 def test_desktop_defaults_to_windows_window_with_explicit_browser_fallback(tmp_path,monkeypatch):
     import logging
     from studycenter_ice import desktop
@@ -383,6 +385,7 @@ def test_desktop_defaults_to_windows_window_with_explicit_browser_fallback(tmp_p
     assert launched==[(True,False),(True,True),(False,False)]
 
 
+@pytest.mark.skipif(sys.platform!='win32',reason='Native Windows webview close')
 def test_native_close_returns_before_webview_reply_and_keeps_background(tmp_path,monkeypatch):
     import sys,threading
     from studycenter_ice.desktop import Desktop
@@ -408,6 +411,7 @@ def test_native_close_returns_before_webview_reply_and_keeps_background(tmp_path
     assert window.events.closing.handlers[0]() is True
 
 
+@pytest.mark.skipif(sys.platform!='win32',reason='Native Windows tray exit')
 def test_native_window_exit_stops_detached_tray_before_owner_unlock(tmp_path,monkeypatch):
     import sys
     from studycenter_ice.desktop import Desktop
@@ -448,6 +452,7 @@ def test_native_dashboard_check_rejects_server_error_or_empty_document(monkeypat
     assert desktop.dashboard_ready()
 
 
+@pytest.mark.skipif(sys.platform!='win32',reason='Native Windows renderer recovery')
 def test_native_failed_load_has_one_retry_and_truthful_receipt(tmp_path,monkeypatch):
     import sys,json
     from studycenter_ice import desktop as module
