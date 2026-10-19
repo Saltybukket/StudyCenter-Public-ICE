@@ -1,6 +1,7 @@
 from datetime import datetime,timedelta
 import shutil
 from types import SimpleNamespace
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -11,6 +12,97 @@ from studycenter_ice.config import Settings,VIENNA
 from studycenter_ice.db import Database
 from studycenter_ice.models import Candidate
 from studycenter_ice.reminders import ReminderService,utc
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+async def test_read_after_app_restart_refreshes_token_without_changing_tasks(tmp_path, monkeypatch):
+    from playwright.async_api import async_playwright, expect
+    browsers = ROOT/'.local'/'browsers'
+    if browsers.exists(): monkeypatch.setenv('PLAYWRIGHT_BROWSERS_PATH', str(browsers))
+    app = create_app(Settings(data_dir=tmp_path))
+    iid = item(app.state.db, 'Synthetisches Quiz 2')
+    other = item(app.state.db, 'Quiz Einheit 2 bearbeiten')
+    current = datetime.now(VIENNA)
+    job(app.state.db, iid, 'quiz-reminder', current)
+    job(app.state.db, other, 'planned-reminder', current)
+    old_client = TestClient(app, base_url='http://127.0.0.1')
+    old_html = old_client.get('/board').text
+    # The page stays open while the local process is restarted.
+    restarted = create_app(Settings(data_dir=tmp_path))
+    client = TestClient(restarted, base_url='http://127.0.0.1')
+    before = {table:restarted.state.db.rows(f'SELECT * FROM {table} ORDER BY 1')
+              for table in ('items', 'item_evidence', 'reminder_jobs')}
+    posts = []; refreshes = []; fail_next_read = [False]
+    async with async_playwright() as driver:
+        executable = __import__('os').environ.get('STUDYCENTER_ICE_TEST_CHROMIUM', driver.chromium.executable_path)
+        if not Path(executable).exists(): pytest.skip('Project Chromium not installed')
+        browser = await driver.chromium.launch(headless=True, executable_path=executable, chromium_sandbox=True)
+        page = await browser.new_page()
+        async def route_request(route):
+            request = route.request
+            path = request.url.split('127.0.0.1', 1)[1]
+            if path == '/board':
+                await route.fulfill(content_type='text/html', body=old_html)
+            elif path.startswith('/static/'):
+                asset = ROOT/'studycenter_ice'/'static'/path.split('?',1)[0].split('/')[-1]
+                await route.fulfill(content_type='text/javascript' if asset.suffix=='.js' else 'text/css', body=asset.read_bytes())
+            else:
+                if path == '/api/notifications/read' and fail_next_read[0]:
+                    fail_next_read[0] = False; posts.append(503)
+                    await route.fulfill(status=503, json={'detail':'Speichern vorübergehend nicht möglich'})
+                    return
+                response = client.request(request.method, path, content=request.post_data_buffer,
+                                          headers=request.headers, follow_redirects=False)
+                if path == '/api/notifications/read': posts.append(response.status_code)
+                if path == '/api/session': refreshes.append(response.status_code)
+                await route.fulfill(status=response.status_code, headers=dict(response.headers), body=response.content)
+        await page.route('**/*', route_request)
+        await page.goto('http://127.0.0.1/board')
+        await page.locator('#notifications-open').click()
+        await page.get_by_role('button', name='Synthetisches Quiz 2 als gelesen markieren', exact=True).click()
+        try:
+            await expect(page.locator('#notifications-list .notification-entry')).to_have_count(1)
+        except AssertionError:
+            pytest.fail(f'POST statuses={posts}, refresh statuses={refreshes}, error={await page.locator("#notifications-error").inner_text()}')
+        await expect(page.locator('#notifications-list')).to_contain_text('Quiz Einheit 2 bearbeiten')
+        await expect(page.locator('#notifications-badge')).to_have_text('1')
+        assert posts == [403, 200] and refreshes == [200]
+        fail_next_read[0] = True
+        await page.locator('#notifications-read').click()
+        await expect(page.locator('#notifications-error')).to_contain_text('Speichern nicht bestätigt')
+        await expect(page.locator('#notifications-list .notification-entry')).to_have_count(1)
+        await expect(page.locator('#notifications-read')).to_be_enabled()
+        assert posts == [403, 200, 503] and refreshes == [200]
+        await page.locator('#notifications-read').click()
+        await expect(page.locator('#notifications-list .notification-entry')).to_have_count(0)
+        await page.get_by_role('button', name='Verlauf', exact=True).click()
+        await expect(page.locator('#notifications-list .notification-entry')).to_have_count(2)
+        assert posts == [403, 200, 503, 200] and refreshes == [200]
+        await browser.close()
+    assert client.get('/api/notifications?unread=true').json()['unread'] == 0
+    assert {table:restarted.state.db.rows(f'SELECT * FROM {table} ORDER BY 1') for table in before} == before
+    fresh = create_app(Settings(data_dir=tmp_path))
+    assert TestClient(fresh).get('/api/notifications?unread=true').json()['unread'] == 0
+
+
+def test_session_refresh_does_not_bypass_origin_or_form_protection(tmp_path):
+    app = create_app(Settings(data_dir=tmp_path)); client = TestClient(app)
+    assert client.get('/api/session').status_code == 403
+    headers = {'X-Requested-With':'fetch'}
+    response = client.get('/api/session', headers=headers)
+    assert response.status_code == 200 and response.json()['csrf'] == app.state.csrf
+    assert response.headers['cache-control'] == 'no-store'
+    assert client.get('/api/session', headers=headers|{'Origin':'https://foreign.example'}).status_code == 403
+    iid=item(app.state.db);job(app.state.db,iid,'protected',datetime.now(VIENNA))
+    rejected=client.post('/api/notifications/read',json={'ids':['protected']},headers={'X-CSRF-Token':'old'})
+    assert rejected.status_code == 403 and rejected.json()['code'] == 'csrf_expired'
+    opaque=client.post('/api/notifications/read',json={'ids':['protected']},headers={'X-CSRF-Token':'old','Origin':'null'})
+    assert opaque.status_code == 403 and opaque.json()['code'] == 'csrf_expired'
+    assert client.get('/api/notifications?unread=true').json()['unread'] == 1
+    assert client.post('/api/notifications/read',json={'ids':['protected']},headers={'X-CSRF-Token':app.state.csrf,'Origin':'https://foreign.example'}).status_code == 403
+    assert client.post('/api/notifications/read',json={'ids':['protected']},headers={'Origin':'null'}).status_code == 403
 
 
 def item(db,title='Erinnerung'):

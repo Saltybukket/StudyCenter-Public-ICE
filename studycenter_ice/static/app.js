@@ -1,4 +1,5 @@
-const token = document.querySelector('meta[name="csrf-token"]').content;
+let token = document.querySelector('meta[name="csrf-token"]').content;
+let tokenRefresh = null;
 const notificationForm=document.querySelector('form[action="/settings/notifications"]');
 if(notificationForm){
   const feedback=document.createElement('p');feedback.setAttribute('role','status');feedback.id='notification-save-result';notificationForm.append(feedback);
@@ -196,9 +197,30 @@ document.querySelectorAll('.settings-form').forEach(form => form.addEventListene
     } else location.href = '/settings';
   } catch (error) {tell(error.message, true); button.disabled = false; if (progress) progress.textContent = '';}
 }));
+async function refreshPageToken() {
+  if (!tokenRefresh) tokenRefresh = (async () => {
+    const response = await fetch('/api/session', {cache:'no-store', headers:{'X-Requested-With':'fetch'}});
+    const session = await response.json();
+    if (!response.ok || typeof session.csrf !== 'string' || !session.csrf) throw new Error('App-Verbindung erneuern fehlgeschlagen. Bitte erneut versuchen.');
+    token = session.csrf;
+    document.querySelector('meta[name="csrf-token"]').content = token;
+    document.querySelectorAll('input[name="csrf"]').forEach(input => { input.value = token; });
+  })();
+  try { await tokenRefresh; } finally { tokenRefresh = null; }
+}
 async function api(url, options = {}) {
-  const response = await fetch(url, {...options, headers: {'X-CSRF-Token': token, ...options.headers}});
-  const result = await response.json();
+  const send = () => {
+    const headers = new Headers(options.headers);
+    headers.set('X-CSRF-Token', token);
+    return fetch(url, {...options, headers});
+  };
+  let response = await send(), result = await response.json();
+  // This explicit guard response proves the first request did not execute.
+  // Never replay a timeout, an origin rejection or a failed application action.
+  if (response.status === 403 && result.code === 'csrf_expired') {
+    await refreshPageToken();
+    response = await send(); result = await response.json();
+  }
   if (!response.ok) throw new Error(result.detail || 'Anfrage fehlgeschlagen');
   return result;
 }

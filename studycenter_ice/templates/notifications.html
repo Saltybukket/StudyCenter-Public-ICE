@@ -6,7 +6,8 @@
   <section id="notifications-panel" class="notification-panel panel" aria-label="Benachrichtigungsverlauf" hidden>
     <div class="notification-heading"><h2>Benachrichtigungen</h2><button type="button" class="secondary small" id="notifications-close" aria-label="Benachrichtigungen schließen">×</button></div>
     <div class="notification-tabs"><button type="button" class="secondary small" data-notification-filter="unread" aria-pressed="true">Ungelesen</button><button type="button" class="secondary small" data-notification-filter="all" aria-pressed="false">Verlauf</button></div>
-    <p class="muted notification-help">Letzte 90 Tage · Meldungen zum selben Termin gebündelt. Gelesene Meldungen bleiben im Verlauf.</p>
+    <p class="muted notification-help">Letzte 90 Tage · Meldungen zum selben Termin gebündelt. Gelesene Meldungen bleiben im Verlauf. Der Aufgabenstatus bleibt unverändert.</p>
+    <p id="notifications-error" class="warning" role="alert" hidden></p>
     <div id="notifications-list" aria-live="polite"></div>
     <div class="notification-footer"><button type="button" id="notifications-read" class="secondary small">Angezeigte als gelesen markieren</button><button type="button" id="notifications-previous" class="secondary small" hidden>Zurück</button><button type="button" id="notifications-more" class="secondary small" hidden>Weitere Meldungen</button><a href="/settings?section=notifications">Einstellungen</a></div>
   </section>

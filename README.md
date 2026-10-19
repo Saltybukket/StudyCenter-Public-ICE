@@ -1,58 +1,64 @@
 # StudyCenter Public ICE
 
-Die vertraute StudyCenter-Oberfläche als eigenständige, lokale Anwendung.
-ICE startet **leer**: keine vorgegebenen Kurse, Dokumente, Konten, Sitzungen,
-persönlichen Einstellungen oder Zugangsdaten. AGPL-3.0-only.
+Die vertraute StudyCenter-Oberfläche für deine eigene Studienorganisation –
+mit Aufgaben, Post-its, Kalender, Dokumenten und lokalem KI-Assistenten.
+ICE startet leer: Du richtest deine Kurse und Verbindungen selbst ein.
 
-## Starten
+## Herunterladen
 
-**Windows 10/11 x64:** [Setup herunterladen](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases),
-installieren und ICE öffnen. Alternativ die portable ZIP entpacken und `start.cmd`
-ausführen. Die erste Einrichtung benötigt Internet und zeigt ihren Fortschritt.
+**Aktuelle Version: ICE beta.2** · Windows und Linux, jeweils x64
 
-**Linux x64 (Ubuntu 24.04 als Zielsystem):** TAR.GZ entpacken, im Ordner
-`sh start.sh` ausführen. Die Oberfläche öffnet sich im normalen Systembrowser.
-Der gesteuerte TU-Browser ist davon getrennt und benötigt eine funktionierende
-Browser-Sandbox. Sicherheitsrichtlinien werden nicht verändert.
+| System | Download | Start |
+| --- | --- | --- |
+| **Windows 10/11** | [**Windows-Setup (.exe)**](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.2/studycenter-public-ice-0.1.0b2-windows-x86_64-setup.exe) | Setup ausführen, anschließend ICE öffnen |
+| Windows, portabel | [Portable ZIP](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.2/studycenter-public-ice-0.1.0b2-windows-x86_64-portable.zip) | Entpacken und `start.cmd` ausführen |
+| **Linux** | [**Linux-Paket (.tar.gz)**](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/download/v0.1.0-ice-beta.2/studycenter-public-ice-0.1.0b2-linux-x86_64.tar.gz) | Entpacken, im Ordner `sh start.sh` ausführen |
 
-**Entwicklung:** Repository klonen, `start.cmd` oder `sh start.sh` ausführen.
-Vorhandenes CPython 3.12 x64 wird benutzt; andernfalls lädt uv eine eigene
-Laufzeit. Alle Pakete landen in einer eigenen virtuellen Umgebung. Ein erneuter
-Start verwendet die Einrichtung und Downloads wieder. Nach einem Abbruch denselben
-Starter erneut ausführen. `--stop` beendet ausschließlich die passende ICE-Instanz
-und lädt nichts herunter. `--setup-only`, `--no-browser`, `--browser`, `--update`
-und `--data-dir ORDNER` sind ebenfalls verfügbar.
+[Versionshinweise und Prüfsummen](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases/tag/v0.1.0-ice-beta.2) · [Alle Versionen](https://github.com/Saltybukket/StudyCenter-Public-ICE/releases)
 
-## Was enthalten ist
+Beim ersten Start werden Internet und etwas Zeit für die Einrichtung benötigt.
+Vorhandenes CPython 3.12 x64 wird verwendet; andernfalls lädt ICE eine eigene
+Laufzeit. Pakete, Profile und Daten bleiben im eigenen ICE-Verzeichnis.
+Nach einem Abbruch denselben Starter erneut ausführen. Weitere Starts verwenden
+die Einrichtung und bereits geladene Komponenten wieder.
 
-- Übersicht, Timeline, Aufgaben und Post-its, Kalender mit Wochen-/Monatsansicht,
-  Informationen/Änderungsverlauf, Archiv, Kurse/Quellen, Dokumente und TU-Mail.
-- Dieselben Einstellungsbereiche: Benachrichtigungen, Sprache, Darstellung,
-  Verbindungen, Google Kalender, Sicherungen und Betrieb. Die Formulare bedienen
-  die tatsächliche Anwendung; Zugangsdaten werden selbst eingerichtet.
-- Lokaler Assistent mit Vorschau, persönlichen Aktionen, Belegen und Rücknahme;
-  Modellverbindung, lokale Lernhinweise, Suche und lokaler MCP-Zugang.
-- OCR, eigener TU-Browser und Sprachbibliotheken werden unter Betrieb ausdrücklich
-  eingerichtet; Sprachmodelle unter Sprache separat geladen. Keine Tesseract- oder
-  anderen Systeminstaller. Originale und Dokumentfassungen bleiben erhalten.
+## Was du nutzen kannst
 
-Quellenabrufe erfolgen manuell. Modellzugänge, Google-Freigaben und Mailkonten sind
-optional und beginnen unverbunden; ihre Benutzung kann eigene Anbieterbedingungen
-oder Kosten haben. ICE wechselt nach OAuth-Fehlern nicht zu einer kostenpflichtigen API.
-Es werden weder fremde Zugangsdaten noch vorhandene Browserprofile importiert.
+- **Organisieren:** Übersicht, Timeline, Aufgaben, Post-its, Wochen-/Monatskalender und Archiv.
+- **Studieren:** Kurse, Quellen, Dokumente, Suche, Änderungen und TU-Mail; Quellenabrufe erfolgen manuell.
+- **Assistenz:** Modellverbindung, lokaler Assistent mit Vorschau, Belegen und Rücknahme sowie lokaler MCP-Zugang.
+- **Einstellen:** Benachrichtigungen, Sprache, Darstellung, Verbindungen, Google Kalender, Sicherungen und Betrieb.
 
-## Daten und Unterschiede
+OCR, TU-Browser und Sprachbibliotheken richtest du bei Bedarf unter **Betrieb**
+ein; Sprachmodelle lädst du separat unter **Sprache**. Konten und Zugänge beginnen
+unverbunden. Google benötigt einen eigenen OAuth-Client. Anbieter können eigene
+Bedingungen oder Kosten haben; ICE wechselt nicht automatisch zu einer bezahlten API.
 
-ICE verwendet Port **18791** sowie eigene Profile und Zugangsspeicher. Der Starter
-legt seine Daten unter `.local/data` im eigenen Ordner an; ein anderer **leerer**
-Ordner ist über `--data-dir` wählbar. Sicherungen enthalten persönliche Inhalte und
-sollten entsprechend aufbewahrt werden. Zugangsdaten sind davon getrennt.
+## Starten aus dem Repository
 
-Die bestehende Public-Version wird nicht aktualisiert oder ersetzt. Hosted MCP /
-Tunnel ist hier nicht eingerichtet; lokale MCP-Verbindungen bleiben verfügbar.
-Windows-Fenster, Tray, native Windows-Meldungen und Windows-Autostart sind unter
-Linux nicht verfügbar. Linux nutzt den Systembrowser; Zugänge bleiben ohne
-ausdrücklich eingerichteten sicheren Schlüsselbund nur für die Sitzung gespeichert.
-Google benötigt einen eigenen OAuth-Desktop-Client und eine persönliche Freigabe.
+```sh
+git clone https://github.com/Saltybukket/StudyCenter-Public-ICE.git
+cd StudyCenter-Public-ICE
+```
 
-Weitere Angaben, Testgrenzen und Komponentenherkunft: [Hinweise](docs/NOTES.md).
+Dann **Windows:** `start.cmd` · **Linux:** `sh start.sh`.
+
+Nützliche Optionen: `--stop`, `--no-browser`, `--setup-only`, `--update` und
+`--data-dir ORDNER` für einen anderen leeren Datenordner. `--stop` beendet nur
+die passende ICE-Instanz und lädt nichts herunter.
+
+## Daten und Plattformen
+
+Daten liegen standardmäßig unter `.local/data`; ICE nutzt Port **18791** und
+getrennte Zugangsspeicher. Vorhandene StudyCenter-Installationen bleiben unverändert.
+Sicherungen können persönliche Inhalte enthalten und sollten sicher aufbewahrt werden.
+
+Unter **Linux** öffnet sich die Oberfläche im normalen Systembrowser. Der separate
+TU-Browser benötigt eine funktionierende Sandbox; Sicherheitsrichtlinien werden
+nicht verändert. Windows-Fenster, Tray, native Windows-Meldungen und Windows-Autostart
+sind dort nicht verfügbar. Ohne ausdrücklich eingerichteten sicheren Schlüsselbund
+bleiben Linux-Zugänge nur für die Sitzung gespeichert. Zielsystem: Ubuntu 24.04 x64.
+Hosted MCP / Tunnel ist nicht eingerichtet; lokales MCP ist verfügbar.
+
+**Beta:** Prüfungen, verbleibende Testgrenzen und Komponentenherkunft stehen in den
+[Hinweisen](docs/NOTES.md). Lizenz: [AGPL-3.0-only](LICENSE).

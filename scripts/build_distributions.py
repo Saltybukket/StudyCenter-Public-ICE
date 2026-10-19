@@ -30,12 +30,12 @@ def build(iscc=None):
             content = content.replace(b'\r\n', b'\n').replace(b'\n', b'\r\n')
         target.write_bytes(content)
     archives = []
-    windows = output / 'studycenter-public-ice-0.1.0b1-windows-x86_64-portable.zip'
+    windows = output / 'studycenter-public-ice-0.1.0b2-windows-x86_64-portable.zip'
     with zipfile.ZipFile(windows, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
         for name in selected:
             archive.write(stage / name, NAME + '/' + name)
     archives.append(windows)
-    linux = output / 'studycenter-public-ice-0.1.0b1-linux-x86_64.tar.gz'
+    linux = output / 'studycenter-public-ice-0.1.0b2-linux-x86_64.tar.gz'
     with tarfile.open(linux, 'w:gz') as archive:
         for name in selected:
             info = archive.gettarinfo(str(stage / name), NAME + '/' + name)
@@ -48,7 +48,7 @@ def build(iscc=None):
     if iscc:
         subprocess.run([str(iscc), '/DSourceRoot=' + str(stage), '/DOutputDir=' + str(output),
                         str(ROOT / 'packaging/windows/installer.iss')], check=True)
-        archives.append(output / 'studycenter-public-ice-0.1.0b1-windows-x86_64-setup.exe')
+        archives.append(output / 'studycenter-public-ice-0.1.0b2-windows-x86_64-setup.exe')
     lines = []
     for archive in archives:
         with archive.open('rb') as stream:

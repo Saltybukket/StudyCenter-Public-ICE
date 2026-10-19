@@ -378,6 +378,8 @@ def create_app(settings=None):
             # header with the unpredictable, current page token proves app access.
             header_token = request.headers.get('x-csrf-token','')
             trusted_opaque = origin == 'null' and bool(header_token) and secrets.compare_digest(header_token,csrf)
+            if origin == 'null' and header_token and not trusted_opaque:
+                return JSONResponse({'detail': 'App-Verbindung erneuern (lokaler Formularschutz)', 'code': 'csrf_expired'}, status_code=403)
             if origin and urlsplit(origin).netloc != request.headers.get("host") and not trusted_opaque:
                 return JSONResponse({"detail": "Fremder Ursprung abgewiesen"}, status_code=403)
             try:
@@ -393,7 +395,7 @@ def create_app(settings=None):
                 form = await request.form()
                 token = form.get("csrf")
             if request.url.path!='/mcp' and (not token or not secrets.compare_digest(str(token), csrf)):
-                return JSONResponse({"detail": "Seite neu laden (lokaler Formularschutz)"}, status_code=403)
+                return JSONResponse({"detail": "Seite neu laden (lokaler Formularschutz)", "code": "csrf_expired"}, status_code=403)
         response = await call_next(request)
         if 'text/html' in response.headers.get('content-type', ''):
             response.headers['Cache-Control'] = 'no-store'
@@ -1641,6 +1643,16 @@ def create_app(settings=None):
             if not source or not source['active']:
                 raise HTTPException(400,'Aktive Quelle wählen')
         return {"run_id": await sync.start(kind='analysis' if analysis_only else 'manual', source_id=source_id)}
+
+    @app.get('/api/session')
+    async def page_session(request: Request):
+        # Same-origin script access only: the custom header requires a CORS
+        # preflight for foreign sites, which this local app does not allow.
+        origin = request.headers.get('origin')
+        if (request.headers.get('x-requested-with') != 'fetch'
+                or origin and origin != 'null' and urlsplit(origin).netloc != request.headers.get('host')):
+            raise HTTPException(403, 'Fremder Ursprung abgewiesen')
+        return JSONResponse({'csrf': csrf}, headers={'Cache-Control': 'no-store'})
 
     @app.get('/api/notifications')
     async def notifications(unread: bool = False, page: int = Query(1,ge=1,le=1000)):
