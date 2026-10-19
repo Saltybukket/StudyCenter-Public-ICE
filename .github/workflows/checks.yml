@@ -40,3 +40,15 @@ jobs:
         run: |
           "$TASK_PYTHON" -m pytest -q
           "$TASK_PYTHON" scripts/check_public.py --outgoing ROOT
+      - name: Start and stop only the own ICE instance
+        shell: bash
+        env:
+          UV_OFFLINE: '1'
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            MSYS_NO_PATHCONV=1 cmd.exe /d /c 'start.cmd --no-browser'
+            MSYS_NO_PATHCONV=1 cmd.exe /d /c 'start.cmd --stop'
+          else
+            sh start.sh --no-browser
+            sh start.sh --stop
+          fi
