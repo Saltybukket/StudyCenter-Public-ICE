@@ -28,6 +28,7 @@ def _process_api():
         'OpenProcess':([w.DWORD,w.BOOL,w.DWORD],w.HANDLE),
         'GetProcessTimes':([w.HANDLE,*([ctypes.POINTER(w.FILETIME)]*4)],w.BOOL),
         'QueryFullProcessImageNameW':([w.HANDLE,w.DWORD,w.LPWSTR,ctypes.POINTER(w.DWORD)],w.BOOL),
+        'WaitForSingleObject':([w.HANDLE,w.DWORD],w.DWORD),
         'TerminateProcess':([w.HANDLE,w.UINT],w.BOOL), 'CloseHandle':([w.HANDLE],w.BOOL)}
     for name,(args,result) in signatures.items():
         fn=getattr(kernel,name);fn.argtypes=args;fn.restype=result
@@ -46,9 +47,13 @@ def _identity_on_handle(kernel,handle,pid):
 
 def process_identity(pid):
     if sys.platform!='win32':return None
-    kernel=_process_api();handle=kernel.OpenProcess(0x1000,False,pid)
+    kernel=_process_api();handle=kernel.OpenProcess(0x101000,False,pid)
     if not handle:return None
-    try:return _identity_on_handle(kernel,handle,pid)
+    try:
+        # Query APIs can still return metadata while an exited process has a
+        # retained handle. A live process has an unsignaled process handle.
+        if kernel.WaitForSingleObject(handle,0)!=258:return None
+        return _identity_on_handle(kernel,handle,pid)
     finally:kernel.CloseHandle(handle)
 
 
@@ -118,11 +123,21 @@ def process_family(root):
 def terminate_identity(identity):
     """Check creation time on the same handle used to terminate: no PID race."""
     import ctypes
-    kernel=_process_api();handle=kernel.OpenProcess(0x1001,False,identity['pid'])
+    kernel=_process_api();handle=kernel.OpenProcess(0x101001,False,identity['pid'])
     if not handle:return False
     try:
+        if kernel.WaitForSingleObject(handle,0)!=258:return False
         if _identity_on_handle(kernel,handle,identity['pid'])!=identity:return False
-        if not kernel.TerminateProcess(handle,1):raise ctypes.WinError(ctypes.get_last_error())
+        if not kernel.TerminateProcess(handle,1):
+            error=ctypes.get_last_error()
+            # The process may have exited between the identity read and the
+            # termination call. Preserve genuine errors for a still-live handle.
+            if kernel.WaitForSingleObject(handle,0)==0:return False
+            raise ctypes.WinError(error)
+        # TerminateProcess is asynchronous. Confirm this exact owned process
+        # exited before reporting a completed stop or releasing its receipt.
+        if kernel.WaitForSingleObject(handle,5000)!=0:
+            raise OSError('Eigener ICE-Prozess hat seine Beendigung noch nicht bestätigt.')
         return True
     finally:kernel.CloseHandle(handle)
 

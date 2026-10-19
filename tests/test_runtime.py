@@ -173,7 +173,8 @@ def test_tray_full_quit_works_while_command_gate_is_busy(tmp_path,monkeypatch):
 
 
 def test_terminate_rechecks_exact_creation_time_on_same_handle(monkeypatch):
-    kernel=SimpleNamespace(OpenProcess=Mock(return_value=123),TerminateProcess=Mock(return_value=True),CloseHandle=Mock())
+    kernel=SimpleNamespace(OpenProcess=Mock(return_value=123),TerminateProcess=Mock(return_value=True),CloseHandle=Mock(),
+                           WaitForSingleObject=Mock(side_effect=lambda handle,timeout:0 if timeout else 258))
     old={'pid':100,'started':1,'exe':'pythonw.exe'}
     monkeypatch.setattr(runtime,'_process_api',lambda:kernel)
     monkeypatch.setattr(runtime,'_identity_on_handle',lambda *args:old|{'started':2})
