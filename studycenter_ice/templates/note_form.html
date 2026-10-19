@@ -1,0 +1,10 @@
+<details class="panel note-compose"><summary>{{ note_compose_label|default('+ Eigenes Post-it hinzufügen') }}</summary>
+<form id="note-form" action="/notes" method="post" class="stack note-form" data-note-form>
+<input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="request_id" value="{{ note_request_id }}">
+<label>Titel<input name="title" required maxlength="240"></label><label>Notiz<textarea name="text" rows="4" maxlength="5000"></textarea></label>
+<details class="note-options"><summary>Datum & Kurs (optional)</summary>
+<label>Datumstyp<select name="date_role"><option value="planned" selected>Geplanter Arbeitstag</option><option value="deadline">Abgabetag</option></select></label>
+<div class="form-row"><label>Kurs (optional)<select name="course_id"><option value="">Keine Kurszuordnung</option>{% for c in courses if c.active %}<option value="{{ c.id }}" {% if course|string==c.id|string %}selected{% endif %}>{{ c.title }}</option>{% endfor %}</select></label><label>Datum (optional)<input name="date" type="date" data-note-date></label></div>
+<div class="form-row"><label>Uhrzeit (optional)<input name="time" type="time" data-note-time disabled></label><label>Link (optional)<input name="url" type="url"></label></div>
+</details>
+<button>Post-it anheften</button><p data-note-progress role="status"></p></form></details>

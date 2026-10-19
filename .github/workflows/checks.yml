@@ -1,0 +1,42 @@
+name: ICE Windows and Linux checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare isolated test environment
+        shell: bash
+        run: |
+          python -m venv .venv
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            echo "TASK_PYTHON=$GITHUB_WORKSPACE/.venv/Scripts/python.exe" >> "$GITHUB_ENV"
+          else
+            echo "TASK_PYTHON=$GITHUB_WORKSPACE/.venv/bin/python" >> "$GITHUB_ENV"
+          fi
+      - name: Install test dependencies
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            "$TASK_PYTHON" -m pip install -c requirements-windows.lock -e '.[dev]'
+          else
+            "$TASK_PYTHON" -m pip install -c requirements-linux.lock -e '.[dev]'
+          fi
+      - name: Synthetic tests and public-content gate
+        shell: bash
+        run: |
+          "$TASK_PYTHON" -m pytest -q
+          "$TASK_PYTHON" scripts/check_public.py --outgoing ROOT

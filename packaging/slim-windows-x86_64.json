@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "version": "0.1.0b3",
+  "platform": "windows-x86_64",
+  "python": "3.12",
+  "components": {
+    "browser": {
+      "archive": {
+        "filename": "studycenter-public-0.1.0b3-windows-x86_64-browser.tar.gz",
+        "url": "https://github.com/Saltybukket/StudyCenter-Public/releases/download/v0.1.0-beta.3/studycenter-public-0.1.0b3-windows-x86_64-browser.tar.gz",
+        "sha256": "1e62cae8a64eaad14c79453cfc97d2fbda508c58fc1d0a2e8821aeb9c723cbd5",
+        "size": 203431112
+      },
+      "installed_bytes": 484559246,
+      "extra": "browser",
+      "python_download_bytes": 38945944
+    },
+    "ocr": {
+      "archive": {
+        "filename": "studycenter-public-0.1.0b3-windows-x86_64-ocr.tar.gz",
+        "url": "https://github.com/Saltybukket/StudyCenter-Public/releases/download/v0.1.0-beta.3/studycenter-public-0.1.0b3-windows-x86_64-ocr.tar.gz",
+        "sha256": "460cf67e76cc6922303f1e74b4ecf47e33a743a84431838e94077c8d1029288f",
+        "size": 15189599
+      },
+      "installed_bytes": 40612659,
+      "python_download_bytes": 0
+    },
+    "speech": {
+      "extra": "speech",
+      "models_separate": true,
+      "archive": {
+        "filename": "studycenter-public-0.1.0b3-windows-x86_64-speech-notices.tar.gz",
+        "url": "https://github.com/Saltybukket/StudyCenter-Public/releases/download/v0.1.0-beta.3/studycenter-public-0.1.0b3-windows-x86_64-speech-notices.tar.gz",
+        "sha256": "92ee71f1e7842f643738e20d6a5ae814256d922bceeb7e4f07f5913b2170e358",
+        "size": 1914073
+      },
+      "python_download_bytes": 84920653
+    }
+  },
+  "extra_wheels": [
+    {
+      "filename": "proxy_tools-0.1.0-py3-none-any.whl",
+      "url": "https://github.com/Saltybukket/StudyCenter-Public/releases/download/v0.1.0-beta.3/proxy_tools-0.1.0-py3-none-any.whl",
+      "sha256": "e230f9c9936e3dfc56d00b20000043f530010455bfad63cee56fef8b80288aa0",
+      "size": 3928
+    }
+  ]
+}

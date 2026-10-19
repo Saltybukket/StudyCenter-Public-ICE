@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Kalender{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/vendor/fullcalendar.css"><link rel="stylesheet" href="/static/vendor/fullcalendar-theme.css"><link rel="stylesheet" href="/static/vendor/fullcalendar-palette.css">
+<link rel="stylesheet" href="{{ static_url('calendar.css') }}">
+<script src="/static/vendor/fullcalendar.js" defer></script><script src="/static/vendor/fullcalendar-theme.js" defer></script><script src="/static/vendor/fullcalendar-de.js" defer></script><script src="{{ static_url('calendar.js') }}" defer></script>
+{% endblock %}
+{% block content %}
+<div class="calendar-views" role="group" aria-label="Kalenderansicht"><button type="button" data-calendar-view="timeGridWeek" aria-pressed="true">Woche</button><button type="button" data-calendar-view="dayGridMonth" aria-pressed="false">Monat</button><button type="button" data-calendar-view="listWeek" aria-pressed="false">Terminliste</button><button type="button" data-calendar-view="gantt" aria-pressed="false">Zeitspannen</button><a class="secondary small" id="calendar-export-link" href="/calendar/export.ics">ICS ↓</a></div>
+<details class="view-filter-menu"><summary>Filter & Exportoptionen</summary>
+<div class="filters"><label>Kurs<select id="calendar-course"><option value="">Alle Kurse</option>{% for c in courses %}<option value="{{ c.id }}">{{ c.title }}</option>{% endfor %}</select></label><label>Art<select id="calendar-kind"><option value="">Alle Arten</option>{% for code,label in kinds.items() %}<option value="{{ code }}">{{ label }}</option>{% endfor %}</select></label></div>
+<p><label class="check"><input type="checkbox" id="calendar-history">Auch historische / inaktive Kurse</label></p>
+<details class="card calendar-export"><summary>Exportoptionen · Kurs & Zeitraum</summary>
+<p>Aktive Kurse: belegte persönliche Termine und verpflichtende Fristen. Ignorierte, abgesagte, widersprüchliche oder unbestätigt angebotene Slots bleiben außen vor. Ohne Uhrzeit bleibt ein Termin ganztägig; ohne belegtes Ende wird keine Dauer ergänzt.</p>
+<form action="/calendar/export.ics" method="get" class="filters">
+<label>Kurs für Export<select name="course" id="export-course"><option value="">Alle aktiven Kurse</option>{% for c in courses if c.active %}<option value="{{ c.id }}">{{ c.title }}</option>{% endfor %}</select></label>
+<label>Von (optional)<input type="date" name="start"></label><label>Bis (optional)<input type="date" name="end"></label>
+<button>ICS herunterladen</button></form><p><small>In einen privaten Kalender importieren. Wiederholte Exporte behalten dieselben UIDs; Aktualisierung und Dubletten hängen vom Kalenderclient ab. Statischer Download, kein Abonnement: zuvor importierte abgesagte Termine werden durch Weglassen nicht automatisch gelöscht. Die Datei kann persönliche Studieninformationen enthalten.</small></p></details>
+</details><section class="calendar-workspace"><div class="calendar-navigation"><div class="calendar-arrows"><button type="button" class="secondary small" id="calendar-prev" aria-label="Vorheriger Zeitraum">←</button><button type="button" class="secondary small" id="calendar-today">Heute</button><button type="button" class="secondary small" id="calendar-next" aria-label="Nächster Zeitraum">→</button></div><h2 id="calendar-title" aria-live="polite"></h2><label>Datum<input type="date" id="calendar-date"></label></div>
+<div id="gantt-options" class="gantt-options" hidden><label>Zeitraum<select id="gantt-days"><option value="14">2 Wochen</option><option value="30" selected>30 Tage</option><option value="90">90 Tage</option></select></label><label class="check"><input type="checkbox" id="gantt-points">Auch Tages- und Einzeltermine</label></div>
+<p id="calendar-explanation" class="calendar-explanation">Links die Uhrzeiten, oben die Wochentage. Termine ohne Uhrzeit stehen separat im Datumsbereich.</p>
+<details class="calendar-abbreviation-legend"><summary>Kürzel im Kalender <span>ES2 · CON · WFI · VO · UE · LV</span></summary><div id="calendar-abbreviations"></div><p>Vollständige Titel stehen beim Darüberfahren und im Termindetail. Weitere lange Titel werden nur für das Raster gekürzt.</p></details>
+<p id="calendar-error" class="setup-note warning" role="alert" hidden></p>
+<div class="calendar-surface" id="calendar-surface" role="region" aria-label="Kalenderansicht" aria-describedby="calendar-explanation" tabindex="0"><div id="calendar"></div></div>
+<section class="calendar-after-hours" id="calendar-after-hours" aria-labelledby="calendar-after-hours-title" hidden>
+<div class="section-heading"><h3 id="calendar-after-hours-title">Außerhalb 08–22 Uhr</h3><span id="calendar-after-hours-count" aria-live="polite"></span></div>
+<ul id="calendar-after-hours-list"></ul>
+</section>
+<details class="calendar-window-list" id="calendar-window-list" hidden><summary>Zeiträume & Anmeldefenster <span id="calendar-window-count"></span></summary><p>Diese Fenster bleiben außerhalb des Stundenrasters. Belegte Fristen erscheinen als einzelne Punkte; vollständige Zeitspannen stehen im Gantt.</p><ul id="calendar-window-items"></ul></details>
+<div id="gantt" class="gantt-scroll" role="region" aria-label="Zeitspannen als Gantt-Diagramm" tabindex="0" hidden></div></section>
+<div class="calendar-legend"><span class="legend-task">Aufgaben & Abgaben</span><span class="legend-exam">Prüfungen</span><span class="legend-event">Veranstaltungen</span><span class="legend-registration">Anmeldefenster</span><span>◆ Einzeltermin / Frist</span></div>
+<dialog id="calendar-event-dialog" class="calendar-event-dialog" aria-labelledby="calendar-event-title" aria-describedby="calendar-event-when">
+<div class="calendar-event-heading"><p id="calendar-event-kind" class="calendar-event-eyebrow"></p><button type="button" id="calendar-event-close" class="secondary" aria-label="Termindetail schließen" autofocus>×</button></div>
+<p id="calendar-event-course" class="calendar-event-course"></p><h2 id="calendar-event-title"></h2><p id="calendar-event-when" class="calendar-event-when"></p>
+<div class="calendar-event-facts"><span id="calendar-event-status"></span><span id="calendar-event-obligation"></span></div>
+<p id="calendar-event-description" class="calendar-event-description" hidden></p><p id="calendar-event-warning" class="calendar-event-warning" hidden></p>
+<p id="calendar-event-personal" class="calendar-event-personal"></p>
+<div class="calendar-event-actions"><a id="calendar-event-open" class="button" href="#">Eintrag öffnen →</a><a id="calendar-event-work" href="#">Bearbeitung ändern</a></div>
+<details class="calendar-event-proof"><summary>Belege & Details</summary><p id="calendar-event-source-range"></p><p>Die Originalangaben, Fundstellen und früheren Versionen bleiben beim Eintrag erhalten.</p><a id="calendar-event-evidence" href="#">Belege & Fundstellen öffnen →</a></details>
+</dialog>{% endblock %}

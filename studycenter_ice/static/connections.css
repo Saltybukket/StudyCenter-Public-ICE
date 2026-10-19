@@ -1,0 +1,92 @@
+/* Local layouts for the TU-Mail and KI-Verbindung pages. */
+.mail-page .panel,.model-page .panel{background:var(--connection-paper,var(--paper,#fff));border-radius:8px;padding:1.15rem 1.25rem}
+.connections-page .connection-icon{flex:none;vertical-align:middle}
+.mail-page button,.model-page button{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;min-height:40px}
+.connection-emblem{display:flex;align-items:center;justify-content:center;flex:0 0 58px;width:58px;height:58px;border-radius:50%;background:var(--soft);color:var(--green)}
+.mail-page .connection-login .connection-heading{flex-wrap:nowrap;gap:1.3rem}
+.mail-page .connection-login-copy{flex:1;min-width:0}
+.mail-page .connection-login h2{font-size:1.12rem}
+.mail-page .connection-login .connection-help{margin:.65rem 0 0}
+.mail-page .connection-login .connection-heading>form{flex:none}
+.mail-page .mail-config{padding:.2rem 0 1.15rem;margin:.95rem 0 1.3rem;border-bottom:1px solid var(--line)}
+.mail-page .mail-config>summary{display:flex;align-items:center;gap:1.2rem;list-style:none;padding:0}
+.mail-page .mail-config>summary::-webkit-details-marker{display:none}
+.mail-page .mail-config>summary:focus-visible{outline:2px solid var(--green);outline-offset:4px}
+.mail-new-control{display:inline-flex!important;align-items:center;gap:.65rem;color:#fff!important;background:var(--green);border:1px solid var(--green);border-radius:7px;padding:.65rem 1rem!important;margin:0!important;font-size:.88rem!important;font-weight:600!important}
+.mail-new-caption{display:inline!important;padding:0!important;margin:0!important;font-size:.8rem!important}
+.mail-page .mail-config[open]>summary{margin-bottom:1rem}
+.mail-page .mail-config[open]>.stack{padding:1.1rem 1.25rem;border:1px solid var(--line);border-radius:8px;background:var(--connection-paper,var(--paper,#fff))}
+.mail-page .section-heading{margin:1.2rem 0 1rem}
+.mail-page .mail-source{margin-bottom:1.1rem;padding:1.1rem 1.25rem}
+.mail-source-row{display:flex;align-items:flex-start;gap:1.3rem}
+.mail-source-copy{flex:1;min-width:0}
+.mail-page .mail-source h2{margin:0 0 .65rem;font-size:1.05rem;line-height:1.4}
+.mail-source-facts{display:flex;align-items:center;flex-wrap:wrap;gap:.55rem 1.2rem;font-size:.76rem;color:var(--muted)}
+.mail-source-facts>span{display:inline-flex;align-items:center;gap:.5rem;line-height:1.4}
+.mail-source-facts .connection-icon{color:var(--green)}
+.mail-source-facts .source-state{padding:.3rem .55rem;font-size:.74rem!important}
+.mail-page .mail-selection{margin:.65rem 0 0;font-size:.76rem;color:var(--muted)}
+.mail-source-controls{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:.55rem}
+.mail-source-controls .connection-actions{gap:.55rem}
+.mail-source-controls button{font-size:.76rem;padding:.6rem .85rem}
+.mail-source-controls .connection-more{display:inline-flex;align-items:center;gap:.55rem;margin:0;font-size:.76rem}
+.mail-source-footer{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin:.85rem 0 0 79px}
+.mail-receipt{min-width:0;flex:1;font-size:.78rem;color:var(--muted)}
+.mail-receipt>summary{font-weight:400}
+.mail-receipt>p{font-size:.77rem;margin:.65rem 0 0}
+.mail-scope-note{display:flex;align-items:center;gap:.5rem;font-size:.73rem;font-style:italic;line-height:1.5;max-width:49%}
+.model-page .connection-intro{font-size:.8rem;line-height:1.65;max-width:85ch;margin-bottom:1.1rem}
+.model-account-card{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.model-account-column{padding-right:1.25rem;border-right:1px solid var(--line);min-width:0}
+.model-account-heading{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.account-emblem{border-radius:8px;color:#fff;background:var(--green)}
+.model-account-heading h2{margin:0;font-size:1.15rem}
+.connection-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.3rem .6rem;border:1px solid var(--line);border-radius:6px;background:var(--soft);font-size:.78rem;font-weight:600;color:var(--green)}
+.connection-status-dot,.gotcha-state-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.connected .connection-status-dot,.gotcha-state-dot.active{background:var(--green)}
+.connection-message{font-size:.78rem;color:var(--muted);margin:.5rem 0}
+.connection-account{font-size:.8rem;overflow-wrap:anywhere}
+.model-account-actions{display:flex;flex-wrap:wrap;gap:.65rem .8rem;align-items:flex-end}
+.model-account-actions #chatgpt-connect{display:grid;grid-template-columns:auto;margin:0;gap:.9rem;flex:1 1 230px}
+.model-account-actions #chatgpt-connect>label{grid-column:1/-1}
+.model-account-actions #chatgpt-connect>button{justify-self:start;font-size:.83rem}
+.model-account-actions .connection-disconnect{margin:0 0 0;flex:none}
+.model-page .connection-disconnect button{font-size:.78rem;padding:.55rem .8rem;min-height:40px}
+.model-page .connection-account-note{font-size:.76rem;line-height:1.6;color:var(--muted);margin:1.2rem 0 0}
+.model-config-column{min-width:0}
+.model-page .model-configure{margin:.3rem 0 0;gap:.65rem}
+.model-page .model-configure>label{font-size:.84rem;font-weight:500}
+.model-page .model-configure>button{font-size:.83rem;margin-bottom:.45rem}
+.model-page .model-provider{margin:.6rem 0 0;padding-top:.85rem;border-top:1px solid var(--line);color:var(--ink)}
+.model-page .model-provider>summary{font-weight:600;font-size:.82rem}
+.model-page .model-provider>p{font-size:.77rem;color:var(--muted);line-height:1.65}
+.model-page .model-provider>label{margin:.7rem 0}
+.model-page .model-provider>small{font-size:.73rem;display:block;line-height:1.5}
+.model-page .gotchas-panel{position:relative}
+.model-page .gotchas-panel>.section-heading{padding-right:145px;gap:.7rem}
+.model-page .gotchas-panel>.section-heading a{display:inline-flex;align-items:center;gap:.45rem;font-size:.74rem;margin-left:auto}
+.model-page .gotchas-panel>p{font-size:.78rem;color:var(--muted);line-height:1.6}
+.model-page .gotcha-new{margin:0}
+.model-page .gotcha-new>summary{position:absolute;top:1.05rem;right:1.25rem;display:inline-flex;align-items:center;gap:.4rem;background:var(--green);color:#fff;border:1px solid var(--green);border-radius:7px;padding:.55rem .8rem;font-size:.8rem;list-style:none}
+.gotcha-new>summary::-webkit-details-marker{display:none}
+.model-page .gotcha-new[open]{padding:.4rem 0 1rem;margin-bottom:.7rem;border-bottom:1px solid var(--line)}
+.model-page .gotcha-rule{border:1px solid var(--line);border-radius:6px;padding:0;margin:.4rem 0;font-size:.81rem}
+.model-page .gotcha-rule>summary{display:flex;align-items:center;gap:1rem;padding:.55rem .8rem;font-weight:600;list-style:none;min-height:50px}
+.gotcha-rule>summary::-webkit-details-marker{display:none}
+.model-page .gotcha-rule>summary>.connection-icon{color:var(--green)}
+.model-page .gotcha-rule>summary>span:not(.gotcha-edit-label){flex:1;min-width:0;overflow-wrap:anywhere}
+.model-page .gotcha-rule>summary>small{float:none;margin:0;display:inline-flex;align-items:center;gap:.65rem;font-size:.73rem;font-weight:400}
+.gotcha-edit-label{font-size:.75rem;font-weight:500;color:var(--green);border:1px solid var(--line);border-radius:5px;padding:.4rem .75rem;white-space:nowrap;margin-left:.5rem}
+.model-page .gotcha-rule[open]>summary{margin:0;border-bottom:1px solid var(--line)}
+.model-page .gotcha-rule>p,.model-page .gotcha-rule>form,.model-page .gotcha-rule>details{margin:.8rem}
+.model-page .gotchas-panel>.connection-help{margin:1rem 0 0}
+.model-page summary:focus-visible,.mail-page summary:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+.compact .mail-page .panel,.compact .model-page .panel{padding:.85rem 1rem}
+.compact .connection-emblem{flex-basis:46px;width:46px;height:46px}
+.compact .mail-source-footer{margin-left:67px}
+.compact .mail-source-row,.compact .model-account-heading{gap:1rem}
+.compact .mail-page .mail-source h2{margin-bottom:.4rem}
+.compact .model-page .gotcha-new>summary{top:.75rem;right:1rem}
+@media(max-width:1250px){.mail-source-row{flex-wrap:wrap}.mail-source-copy{flex-basis:calc(100% - 80px)}.mail-source-controls{margin-left:79px;align-items:flex-start}.mail-source-controls .connection-more{margin:.15rem 0}.compact .mail-source-controls{margin-left:67px}.mail-scope-note{max-width:48%}.model-account-heading{gap:.65rem}.model-account-heading h2{font-size:1.04rem}}
+@media(max-width:950px){.model-account-card{grid-template-columns:1fr}.model-account-column{padding:0 0 1.1rem;border-right:0;border-bottom:1px solid var(--line)}.model-page .gotchas-panel>.section-heading{padding-right:0;margin-bottom:3.4rem}.model-page .gotcha-new>summary{top:4rem;left:1.25rem;right:auto}.compact .model-page .gotcha-new>summary{top:3.65rem;left:1rem;right:auto}}
+@media(max-width:700px){.mail-page .connection-login .connection-heading{display:grid;grid-template-columns:46px minmax(0,1fr);gap:.8rem}.mail-page .connection-login .connection-heading>div{flex-basis:auto}.mail-page .connection-login .connection-heading>form{grid-column:1/-1;margin-top:.3rem}.connection-emblem{width:46px;height:46px;flex-basis:46px}.mail-page .mail-config>summary{flex-wrap:wrap;gap:.55rem}.mail-new-caption{flex-basis:100%}.mail-source-row{gap:.8rem}.mail-source-copy{flex-basis:calc(100% - 60px)}.mail-source-controls,.compact .mail-source-controls{margin-left:0;width:100%}.mail-source-controls .connection-actions{width:100%;display:flex;flex-wrap:wrap}.mail-source-controls .connection-actions form{flex:1 1 210px}.mail-source-controls .connection-actions button{width:100%}.mail-source-footer,.compact .mail-source-footer{margin-left:0;flex-direction:column;gap:.65rem}.mail-scope-note{max-width:100%}.mail-page .mail-source h2{font-size:1rem}.mail-source-facts{gap:.55rem .9rem}.model-page .gotcha-rule>summary{flex-wrap:wrap;gap:.55rem .75rem}.model-page .gotcha-rule>summary>span:not(.gotcha-edit-label){flex-basis:calc(100% - 40px)}.model-page .gotcha-rule>summary>small{flex:1;min-width:0;padding-left:37px}.gotcha-edit-label{margin:0}.model-page .gotchas-panel>.section-heading{margin-bottom:0;padding-right:0}.model-page .gotchas-panel>.section-heading a{margin-left:0;flex-basis:100%}.model-page .gotcha-new{margin:.75rem 0}.model-page .gotcha-new>summary,.compact .model-page .gotcha-new>summary{position:static}.model-page .gotcha-new[open]{margin-bottom:.8rem}.model-page .gotcha-new[open]>summary{margin-bottom:.8rem}.model-account-heading{gap:.75rem}.model-account-actions{align-items:flex-start}.model-account-actions .connection-disconnect{align-self:flex-end}.model-page .model-account-actions #chatgpt-connect>button{white-space:normal;text-align:left}}

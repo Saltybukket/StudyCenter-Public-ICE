@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf }}">
+  <script src="{{ static_url('theme.js') }}"></script>
+  <title>{% block title %}StudyCenter-ICE{% endblock %} · StudyCenter-ICE</title>
+  <link rel="stylesheet" href="{{ static_url('app.css') }}">
+  <link rel="stylesheet" href="{{ static_url('details.css') }}">
+  {% block head %}{% endblock %}
+  <link rel="stylesheet" href="{{ static_url('theme.css') }}">
+  <script src="{{ static_url('app.js') }}" defer></script>
+  <script src="{{ static_url('voice.js') }}" defer></script>
+  <script src="{{ static_url('notifications.js') }}" defer></script>
+  <link rel="stylesheet" href="{{ static_url('notifications.css') }}">
+</head>
+<body data-page="{{ page_key }}">
+  <a class="skip-link" href="#main">Zum Inhalt</a>
+  <header class="masthead"><a class="brand" href="/overview"><span class="brand-mark">sc</span>StudyCenter ICE <span class="local">LOKAL</span></a>
+    <form action="/search" method="get" class="header-search" role="search"><label class="visually-hidden" for="global-search">Alle Studieninformationen durchsuchen</label><input id="global-search" type="search" name="q" placeholder="StudyCenter-ICE durchsuchen" maxlength="240" required><button class="secondary" aria-label="Globale Suche">⌕</button></form>
+    <div class="actions">{% include 'notifications.html' %}<button type="button" id="voice-open" class="secondary" aria-label="Sprachassistent öffnen" title="Sprachassistent"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3" fill="currentColor"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8" fill="none" stroke="currentColor" stroke-width="2"/></svg></button><details class="login-menu"><summary>TU-Zugang</summary><div class="login-actions"><button type="button" id="login-button" class="secondary">TU-Anmeldung öffnen</button><button type="button" id="browser-close-button" class="secondary">TU-Browser schließen</button></div></details><button type="button" id="sync-button">Jetzt synchronisieren <span aria-hidden="true">↻</span></button></div>
+  </header>
+  <div class="layout"><aside>
+    <p class="eyebrow">DEIN STUDIUM</p>
+    <nav aria-label="Hauptnavigation">
+    {% for url,label,icon in [('/overview','Übersicht','◉'),('/', 'Timeline', '↗'),('/board','Aufgaben & Notizen','✓'),('/calendar','Kalender','▦'),('/search','Suche','⌕')] %}
+      <a href="{{ url }}" {% if path==url or (url=='/board' and path=='/pins') %}aria-current="page"{% endif %}><span aria-hidden="true">{{ icon }}</span>{{ label }}</a>
+    {% endfor %}
+    </nav>
+    <p class="eyebrow nav-heading">QUELLEN & EINSTELLUNGEN</p>
+    <nav aria-label="Verwaltung">
+    {% for url,label,icon in [('/entries','Informationen','≡'),('/archive','Archiv','□'),('/sources','Kurse & Quellen','⊞'),('/documents','Dokumente','≡'),('/mail','TU-Mail','✉'),('/model','KI-Verbindung','◎'),('/settings','Einstellungen','⚙')] %}
+      <a href="{{ url }}" {% if path==url or (url=='/documents' and path.startswith('/documents/')) %}aria-current="page"{% endif %}><span aria-hidden="true">{{ icon }}</span>{{ label }}</a>
+    {% endfor %}
+    </nav>
+    <div class="sidebar-note"><span class="status-dot"></span> Ein Rechner. Dein Überblick.<br><small>Zeitzone Europe/Vienna</small></div>
+  </aside>
+  <main id="main"><div class="page-toolbar"><h1>{{ self.title() }}</h1>{% block toolbar_action %}{% endblock %}<div class="toolbar-tools"><label class="check"><input type="checkbox" id="compact-toggle">Kompakt</label></div></div><div class="sync-strip" {% if stage=='Bereit' %}hidden{% endif %}><div class="sync-copy"><span id="sync-state" role="status">{{ stage }}</span><small id="sync-progress-label" hidden></small></div><progress id="sync-progress" aria-label="Quellenprüfung im aktuellen Sync" hidden></progress></div>
+    <div id="notice" role="status" hidden></div>
+    {% if restore_pending and path != '/settings' %}<p class="setup-note warning">Wiederherstellung vorbereitet: Änderungen und Syncs warten auf den App-Neustart. <a href="/settings">Anleitung oder Abbrechen →</a></p>{% endif %}
+    {% if not settings.model_ready %}<div class="setup-note">KI-Auswertung noch nicht bereit. Seiten und PDFs bleiben gespeichert. <a href="/model">Modell verbinden und Live-Probe starten →</a></div>{% endif %}
+    {% block content %}{% endblock %}
+  </main></div>
+  <footer>StudyCenter-ICE <span>Lokal · Quellen-Sync nur manuell</span></footer>
+  {% include 'voice.html' %}
+</body></html>

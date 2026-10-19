@@ -1,0 +1,41 @@
+{% extends 'base.html' %}{% from 'macros.html' import empty %}
+{% block title %}Timeline{% endblock %}
+{% macro timeline_card(item) -%}
+<article class="time-event kind-{{ item.data.kind }}" data-timeline-item="{{ item.id }}" style="--course-color:{{ item.course_color }}">
+  <small class="course-label" title="{{ item.course_title or 'Eigene Notiz / Dokument' }}">{{ item.course_title or ('Eigene Notiz' if item.identity.startswith('note:') else 'TU-Mail / Dokument') }}</small>
+  <h3><a href="/items/{{ item.id }}" title="{{ item.data.title }}">{{ item.data.title }}</a></h3>
+  <div class="time-event-footer"><small>{{ item.action_label }} · {% if item.action_time %}{{ item.action_time[:5] }}{% else %}ohne Uhrzeit{% endif %}</small><a class="time-proof" href="/items/{{ item.id }}" aria-label="Beleg zu {{ item.data.title }}">Beleg <span aria-hidden="true">→</span></a></div>
+  {% if item.personally_planned and not item.booking_proven %}<small class="time-caution">Eigene Planung · Buchung nicht belegt</small>{% endif %}
+  {% if item.status=='done' %}<small class="muted">Erledigt</small>{% endif %}
+</article>
+{%- endmacro %}
+{% block content %}
+<section class="timeline-workspace">
+  <div class="timeline-heading"><div><h2>{{ 'Termine & Fristen' if past else 'Nächste Termine & Fristen' }}</h2><p>{{ upcoming|length }} {{ 'Einträge' if past else 'offene Einträge' }} · {{ time_days[0].label }} – {{ time_days[-1].label }}</p></div>
+    <nav class="timeline-ranges" aria-label="Zeitraum">{% for n in [7,14,30] %}<a href="/?days={{ n }}&past={{ past }}{% if course %}&course={{ course }}{% endif %}{% if kind %}&kind={{ kind }}{% endif %}{% if include_inactive %}&include_inactive=true{% endif %}" {% if days==n %}aria-current="true"{% endif %}>{{ n }} Tage</a>{% endfor %}</nav>
+  </div>
+  <div class="timeline-toolbar">
+    <nav class="timeline-ranges" aria-label="Rückblick">{% for n,label in [(0,'Ab heute'),(7,'1 Woche zurück'),(30,'1 Monat zurück')] %}<a href="/?past={{ n }}&days={{ days }}{% if course %}&course={{ course }}{% endif %}{% if kind %}&kind={{ kind }}{% endif %}{% if include_inactive %}&include_inactive=true{% endif %}" {% if past==n %}aria-current="true"{% endif %}>{{ label }}</a>{% endfor %}</nav>
+    <details class="view-filter-menu timeline-filters" {% if course or kind or include_inactive %}open{% endif %}><summary>Filter{% if course or kind or include_inactive %} · aktiv{% else %} · alle Kurse{% endif %}</summary>
+      <form class="filters" method="get"><input type="hidden" name="past" value="{{ past }}"><label>Kurs<select name="course"><option value="">Alle Kurse</option>{% for c in courses %}<option value="{{ c.id }}" {% if course==c.id|string %}selected{% endif %}>{{ c.title }}</option>{% endfor %}</select></label><label>Art<select name="kind"><option value="">Alle Arten</option>{% for code,label in kinds.items() %}<option value="{{ code }}" {% if kind==code %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label><label>Zeitraum<select name="days">{% for n in [7,14,30,90,366] %}<option value="{{ n }}" {% if days==n %}selected{% endif %}>{{ n }} Tage voraus</option>{% endfor %}</select></label><label class="check"><input type="checkbox" name="include_inactive" value="true" {% if include_inactive %}checked{% endif %}>Auch historische / inaktive Kurse</label><button class="secondary">Anwenden</button></form>
+    </details>
+    <div class="time-controls"><button type="button" class="secondary small" data-time-step="-1" aria-label="Zeitstrahl zurück">←</button><button type="button" class="secondary small" data-time-today>Heute</button><button type="button" class="secondary small" data-time-step="1" aria-label="Zeitstrahl weiter">→</button><label><span class="visually-hidden">Zu einem Tag springen</span><input type="date" id="time-jump" value="{{ today }}" min="{{ time_days[0].date }}" max="{{ time_days[-1].date }}" aria-label="Zu einem Tag springen"></label></div>
+  </div>
+  <p class="timeline-hint">Seitlich scrollen · Einträge öffnen ihre Details und Belege.{% if past %} Vergangene Tage enthalten auch erledigte Einträge.{% endif %}</p>
+  <div class="time-scroll" tabindex="0" aria-label="Zeitstrahl mit Tagen und Ereignissen"><div class="time-ray" style="--day-count:{{ time_days|length }}">
+  {% for day in time_days %}
+    {% set cards = day['items'][:3] %}{% set upper = cards[:1] if cards|length>1 or loop.index0 % 2==0 else [] %}{% set lower = cards[1:] if cards|length>1 else (cards if not upper else []) %}
+    <div class="time-day-guide {% if day.weekday in ['Sa','So'] %}is-weekend{% endif %}" style="grid-column:{{ loop.index }};grid-row:1/4" aria-hidden="true"></div>
+    <div class="time-branch above" style="grid-column:{{ loop.index }};grid-row:1"><div class="time-stack">{% for item in upper %}{{ timeline_card(item) }}{% endfor %}</div></div>
+    <div class="time-day {% if day.date==today %}is-today{% endif %} {% if day.weekday in ['Sa','So'] %}is-weekend{% endif %}" data-day="{{ day.date }}" style="grid-column:{{ loop.index }};grid-row:2"><span class="day-dot" aria-hidden="true"></span>{% if day.date==today %}<span class="today-label">Heute</span>{% endif %}<time datetime="{{ day.date }}"><small>{{ day.weekday }}</small><strong>{{ day.label }}</strong></time></div>
+    <div class="time-branch below" style="grid-column:{{ loop.index }};grid-row:3"><div class="time-stack">{% for item in lower %}{{ timeline_card(item) }}{% endfor %}
+    {% if day['items']|length > 3 %}<a class="time-more" href="/calendar?date={{ day.date }}{% if course %}&course={{ course }}{% endif %}{% if kind %}&kind={{ kind }}{% endif %}{% if include_inactive %}&include_inactive=true{% endif %}">{{ day['items']|length - 3 }} weitere im Kalender →</a>{% elif not cards %}<span class="time-quiet" aria-label="Keine Termine">—</span>{% endif %}
+    </div></div>
+  {% endfor %}</div></div>
+  {% if not upcoming %}{{ empty('Keine gespeicherten persönlichen Termine oder relevanten Fristen in diesem Zeitraum.' if past else 'Keine offenen persönlichen Termine oder relevanten Fristen in diesem Zeitraum.') }}{% endif %}
+</section>
+<nav class="timeline-links" aria-label="Weitere Einträge">
+  {% if overdue_count %}<a href="/board{% if course %}?course={{ course }}{% endif %}"><span aria-hidden="true">◷</span>{{ overdue_count }} offene vergangene Fristen · im Board bearbeiten →</a>{% endif %}
+  <a href="/entries?view=updates{% if course %}&course={{ course }}{% endif %}"><span aria-hidden="true">↻</span>Neu & geändert →</a><a href="/entries?view=undated{% if course %}&course={{ course }}{% endif %}"><span aria-hidden="true">?</span>Ohne gesichertes Datum →</a><a href="/archive{% if course %}?course={{ course }}{% endif %}"><span aria-hidden="true">□</span>Erledigte im Archiv →</a>
+</nav>
+{% endblock %}

@@ -1,0 +1,13 @@
+<div class="notification-menu">
+  <button type="button" id="notifications-open" class="secondary" aria-label="Benachrichtigungen öffnen" aria-expanded="false" aria-controls="notifications-panel" title="Benachrichtigungen">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span id="notifications-badge" class="notification-badge" hidden></span>
+  </button>
+  <section id="notifications-panel" class="notification-panel panel" aria-label="Benachrichtigungsverlauf" hidden>
+    <div class="notification-heading"><h2>Benachrichtigungen</h2><button type="button" class="secondary small" id="notifications-close" aria-label="Benachrichtigungen schließen">×</button></div>
+    <div class="notification-tabs"><button type="button" class="secondary small" data-notification-filter="unread" aria-pressed="true">Ungelesen</button><button type="button" class="secondary small" data-notification-filter="all" aria-pressed="false">Verlauf</button></div>
+    <p class="muted notification-help">Letzte 90 Tage · Meldungen zum selben Termin gebündelt. Gelesene Meldungen bleiben im Verlauf.</p>
+    <div id="notifications-list" aria-live="polite"></div>
+    <div class="notification-footer"><button type="button" id="notifications-read" class="secondary small">Angezeigte als gelesen markieren</button><button type="button" id="notifications-previous" class="secondary small" hidden>Zurück</button><button type="button" id="notifications-more" class="secondary small" hidden>Weitere Meldungen</button><a href="/settings?section=notifications">Einstellungen</a></div>
+  </section>
+</div>

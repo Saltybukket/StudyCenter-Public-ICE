@@ -1,0 +1,60 @@
+/* Wall controls stay scoped to the two Post-it pages. */
+body:is([data-page="board"],[data-page="pins"]) .page-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.45rem .8rem;margin-bottom:.75rem;align-items:start}
+body:is([data-page="board"],[data-page="pins"]) .page-toolbar h1{grid-column:1;grid-row:1 / span 2;align-self:center}
+body:is([data-page="board"],[data-page="pins"]) .toolbar-tools{grid-column:2;grid-row:1;justify-self:end;margin-left:0;width:auto}
+body:is([data-page="board"],[data-page="pins"]) .page-toolbar .note-compose{grid-column:2;grid-row:2;justify-self:end;position:relative;margin:0;padding:0;border:0;background:transparent}
+body:is([data-page="board"],[data-page="pins"]) .page-toolbar .note-compose>summary{list-style:none;padding:.5rem .85rem;background:var(--green);border-radius:7px;color:#fff;font-size:.88rem;font-weight:600;cursor:pointer}
+body:is([data-page="board"],[data-page="pins"]) .page-toolbar .note-compose>summary::-webkit-details-marker{display:none}
+body:is([data-page="board"],[data-page="pins"]) .page-toolbar .note-compose[open]>summary{margin:0}
+body:is([data-page="board"],[data-page="pins"]) .page-toolbar .note-compose>form{position:absolute;z-index:15;top:calc(100% + .5rem);right:0;width:min(440px,calc(100vw - 3rem));max-height:75vh;overflow:auto;background:var(--paper);border:1px solid var(--line);border-radius:9px;box-shadow:0 8px 30px #183c3926;padding:1rem;color:var(--ink)}
+body:is([data-page="board"],[data-page="pins"]) .postit-grid,body:is([data-page="board"],[data-page="pins"]) .magnet-wall.card-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));gap:1rem;align-items:start}
+body:is([data-page="board"],[data-page="pins"]) .postit-board{padding:.25rem}
+body:is([data-page="board"],[data-page="pins"]) .wall-filters{align-items:center;gap:.65rem 1.25rem}
+.postit-personal-filter{display:flex;align-items:center;gap:.35rem;border:0;padding:0;margin:0;min-width:0}
+.postit-personal-filter legend{float:left;padding:0 .5rem 0 0;font-size:.78rem;font-weight:600}
+.postit-personal-filter .personal-chip{padding:.32rem .72rem;border:1px solid #becbbb;border-radius:999px;background:var(--paper);color:var(--ink);font-size:.78rem;font-weight:500}
+.postit-personal-filter .personal-chip.selected{background:var(--green);border-color:var(--green);color:#fff}
+body:is([data-page="board"],[data-page="pins"]) .wall-filters .due-filter{flex:1 1 auto}
+body:is([data-page="board"],[data-page="pins"]) .wall-filters .due-filter small{flex-basis:100%;margin-left:0}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note{padding:3.15rem 1rem 1rem;border-top:0;border-left:0;border-radius:4px;box-shadow:0 4px 10px #17384120;color:#143d49;isolation:isolate}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note.note-green{background:#dceccc}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note.note-blue{background:#cee7ef}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note.note-yellow{background:#fff1a0}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note.note-orange{background:#ffdbb4}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note.note-red{background:#f5c9c4}
+.sticky-note .postit-top-actions{position:absolute;right:.5rem;top:.5rem;display:flex;gap:.3rem;align-items:start;z-index:2}
+.sticky-note .postit-top-actions .pin-form{margin:0}
+.sticky-note .postit-icon{display:flex;align-items:center;justify-content:center;flex:none;width:34px;height:34px;min-height:34px;padding:0;border:1px solid #a7bcc7;border-radius:6px;background:#ffffffdf;color:#16434f;font-size:1.4rem;line-height:1;cursor:pointer;box-shadow:0 1px 3px #183c391a}
+.sticky-note .postit-icon svg{width:19px;height:19px}
+.sticky-note .postit-pin[aria-pressed="true"]{background:#16655b;color:#fff;border-color:#16655b}
+.sticky-note .postit-menu{position:relative}
+.sticky-note:has(.postit-menu[open]){z-index:6}
+.sticky-note .postit-menu>summary{list-style:none}
+.sticky-note .postit-menu>summary::-webkit-details-marker{display:none}
+.sticky-note .postit-menu>summary:focus-visible{outline:2px solid #16655b;outline-offset:3px}
+.sticky-note .postit-menu-items{position:absolute;right:0;top:calc(100% + .3rem);width:205px;max-width:calc(100vw - 3rem);padding:.4rem;border:1px solid #b8cbd1;border-radius:7px;background:var(--paper);color:var(--ink);box-shadow:0 5px 15px #183c3930;font-size:.82rem;z-index:4}
+.sticky-note .postit-menu-items>a,.sticky-note .postit-menu-items>form>button{display:block;width:100%;padding:.45rem .5rem;font-size:.82rem;text-align:left;font-weight:400;color:var(--ink);background:transparent;border:0;box-shadow:none}
+.sticky-note .postit-menu-items>a:hover{background:var(--soft);text-decoration:none;border-radius:4px}
+.sticky-note .postit-source-tags{border-top:1px solid var(--line);margin-top:.3rem;padding:.15rem .35rem}
+.sticky-note .postit-source-tags .tags{margin:.3rem 0}
+.sticky-note .postit-work-row{display:flex;align-items:center;gap:.4rem;flex-wrap:nowrap;margin-top:1rem}
+.sticky-note .postit-status{display:flex;flex:1;gap:.35rem;min-width:0;margin:0;align-items:center}
+.sticky-note .postit-status-option{flex:1;min-width:0;height:34px;padding:.25rem .35rem;border:1px solid #a7bcc7;background:#ffffffdf;color:#16434f;border-radius:6px;font-size:.76rem;font-weight:500;white-space:nowrap;box-shadow:0 1px 3px #183c391a}
+.sticky-note .postit-status-option[aria-pressed="true"]{background:#16655b;color:#fff;border-color:#16655b}
+.sticky-note .postit-status .postit-submit[hidden]{display:none}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note .card-meta,body:is([data-page="board"],[data-page="pins"]) .sticky-note .item-date,body:is([data-page="board"],[data-page="pins"]) .sticky-note .description-preview{color:#31525d}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note small{color:#31525d}
+body:is([data-page="board"],[data-page="pins"]) .sticky-note h3 a{color:#0d5265}
+.compact:is([data-page="board"],[data-page="pins"]) .sticky-note{padding:2.95rem .8rem .75rem;border:0;border-radius:4px}
+.compact:is([data-page="board"],[data-page="pins"]) .postit-work-row{margin-top:.65rem}
+.compact:is([data-page="board"],[data-page="pins"]) .postit-status-option{font-size:.75rem;padding:.2rem .25rem;height:34px;min-height:34px}
+.compact:is([data-page="board"],[data-page="pins"]) .postit-top-actions .pin-form button{padding:0;min-height:34px}
+.compact:is([data-page="board"],[data-page="pins"]) .sticky-note .description-preview{display:block}
+.compact:is([data-page="board"],[data-page="pins"]) .sticky-note .description-preview>summary{display:flex;align-items:baseline;gap:.35rem;list-style:none}
+.compact:is([data-page="board"],[data-page="pins"]) .sticky-note .description-preview>summary::-webkit-details-marker{display:none}
+.compact:is([data-page="board"],[data-page="pins"]) .sticky-note .description-preview>summary:before{content:'▸';flex:none}
+.compact:is([data-page="board"],[data-page="pins"]) .sticky-note .description-preview[open]>summary:before{content:'▾'}
+.compact:is([data-page="board"],[data-page="pins"]) .sticky-note .description-preview:not([open]) summary span{-webkit-line-clamp:2}
+html[data-theme="dark"] body:is([data-page="board"],[data-page="pins"]) .page-toolbar .note-compose>summary{background:#387d80}
+html[data-theme="dark"] .sticky-note .postit-menu-items :is(a,button,small,.tag){color:var(--ink)}
+@media(max-width:700px){body:is([data-page="board"],[data-page="pins"]) .postit-grid,body:is([data-page="board"],[data-page="pins"]) .magnet-wall.card-grid{grid-template-columns:minmax(0,1fr)}body:is([data-page="board"],[data-page="pins"]) .page-toolbar .note-compose>form{position:fixed;left:1rem;right:1rem;top:20vh;width:auto}.sticky-note .postit-status-option{font-size:.8rem}}

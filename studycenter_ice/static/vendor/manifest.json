@@ -1,0 +1,34 @@
+{
+  "package": "fullcalendar",
+  "version": "7.1.1",
+  "files": {
+    "fullcalendar.js": {
+      "url": "https://cdn.jsdelivr.net/npm/fullcalendar@7.1.1/all/global.js",
+      "sha256": "cedec2f5522db39157ca1a7c9036b360952d44f135a8b827a4ae67a84ee77acc"
+    },
+    "fullcalendar-theme.js": {
+      "url": "https://cdn.jsdelivr.net/npm/fullcalendar@7.1.1/themes/monarch/global.js",
+      "sha256": "048c13c11982e5449ccc43468d1b60539c00cac7f3b1b91710dfe7c7c403d666"
+    },
+    "fullcalendar-de.js": {
+      "url": "https://cdn.jsdelivr.net/npm/fullcalendar@7.1.1/locales/de/global.js",
+      "sha256": "c3f812a9e0496862bbbb8c315ec9d81b6b925618220b94a316d370e83257c39a"
+    },
+    "fullcalendar.css": {
+      "url": "https://cdn.jsdelivr.net/npm/fullcalendar@7.1.1/skeleton.css",
+      "sha256": "adc2981e2bd277e8572bf908bd04bd5e3f95f3ba74219f0242855bfbdda24513"
+    },
+    "fullcalendar-theme.css": {
+      "url": "https://cdn.jsdelivr.net/npm/fullcalendar@7.1.1/themes/monarch/theme.css",
+      "sha256": "26069600025671df4fb01049f9bb17728fa0a62567ab88511f93fc4e1a7f3902"
+    },
+    "fullcalendar-palette.css": {
+      "url": "https://cdn.jsdelivr.net/npm/fullcalendar@7.1.1/themes/monarch/palettes/purple.css",
+      "sha256": "83d92f7931c6c1b8a4f12385d985c55ddeeb1f992d74feef6b9fe8e85e16a121"
+    },
+    "LICENSE.txt": {
+      "url": "https://cdn.jsdelivr.net/npm/fullcalendar@7.1.1/LICENSE.md",
+      "sha256": "000882c713ee4c9729c7eeafbebb04a98a633517c2e95f1258fc488853124df3"
+    }
+  }
+}
