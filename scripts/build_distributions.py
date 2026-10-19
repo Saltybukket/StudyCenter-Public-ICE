@@ -17,15 +17,18 @@ def build(iscc=None):
     output.mkdir(exist_ok=True)
     stage = ROOT / 'build/distribution' / uuid4().hex / NAME
     stage.mkdir(parents=True, exist_ok=False)
-    names = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
+    revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip()
+    names = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', '-z', revision], cwd=ROOT).decode().split('\0')
     selected = [name for name in names if name and not name.startswith(('.github/', 'tests/')) and name != 'AGENTS.md']
     for name in selected:
-        source = ROOT / name
-        if source.is_symlink():
+        if (ROOT / name).is_symlink():
             raise ValueError('Links are not distribution source: ' + name)
         target = stage / name
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(source, target)
+        content = subprocess.check_output(['git', 'show', revision + ':' + name], cwd=ROOT)
+        if name.endswith(('.cmd', '.vbs')):
+            content = content.replace(b'\r\n', b'\n').replace(b'\n', b'\r\n')
+        target.write_bytes(content)
     archives = []
     windows = output / 'studycenter-public-ice-0.1.0b1-windows-x86_64-portable.zip'
     with zipfile.ZipFile(windows, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
