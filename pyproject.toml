@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools==84.0.0"]
+requires = ["setuptools==84.1.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -13,7 +13,7 @@ dependencies = [
   "beautifulsoup4==4.15.0", "pymupdf==1.28.2", "playwright==1.63.0",
   "python-multipart==0.0.32", "portalocker==4.4.0", "tzdata==2026.5",
   "pydantic==2.14.0", "pyjwt[crypto]==2.15.1", "keyring==25.7.0",
-  "pystray==0.19.5; sys_platform == 'win32'", "pillow==12.3.0",
+  "pystray==0.19.5; sys_platform == 'win32'", "pillow==13.0.0",
   "windows-toasts==1.3.1; sys_platform == 'win32'",
   "pywebview==6.2.1; sys_platform == 'win32'",
 ]
