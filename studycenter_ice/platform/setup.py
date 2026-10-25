@@ -415,7 +415,7 @@ def ensure_environment(root, uv, *, source=None, manifest=None, update=False):
         run([*common, download(root, record)], env=env)
     if source:
         # The application's editable build is the only source build exception.
-        run([*common, 'setuptools==84.0.0'], env=env)
+        run([*common, 'setuptools'], env=env)
         run([*common, '--no-build-isolation', '--editable', source], env=env)
     else:
         wheel = download(root, release['wheel'])
